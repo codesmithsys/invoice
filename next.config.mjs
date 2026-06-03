@@ -12,9 +12,6 @@ import fs from "node:fs";
 
 const loadTsFileViaJiti = createJiti(fileURLToPath(import.meta.url));
 
-// Import ENV file here to validate during build. Using jiti@^1 we can import .ts files :)
-loadTsFileViaJiti("./src/env");
-
 // Validate all i18n files, that are used to translate the /about page
 async function validatei18nAndInvoicePDFTranslationFiles() {
   // Validates our custom translations object against the schema, that is used to translate PDF fields, invoice items table, etc.

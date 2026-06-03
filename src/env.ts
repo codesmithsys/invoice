@@ -3,40 +3,40 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
-    AUTH_TOKEN: z.string().default(""),
+    AUTH_TOKEN: z.string(),
 
-    RESEND_API_KEY: z.string().default(""),
+    RESEND_API_KEY: z.string(),
 
-    UPSTASH_REDIS_REST_URL: z.string().default(""),
-    UPSTASH_REDIS_REST_TOKEN: z.string().default(""),
+    UPSTASH_REDIS_REST_URL: z.string(),
+    UPSTASH_REDIS_REST_TOKEN: z.string(),
 
-    TELEGRAM_BOT_TOKEN: z.string().default(""),
-    TELEGRAM_CHAT_ID: z.string().default(""),
+    TELEGRAM_BOT_TOKEN: z.string(),
+    TELEGRAM_CHAT_ID: z.string(),
 
-    FROM_NAME: z.string().default(""),
-    FROM_ADDRESS: z.string().default(""),
-    FROM_VAT_NO: z.string().default(""),
-    FROM_EMAIL: z.string().default(""),
-    FROM_ACCOUNT_NUMBER: z.string().default(""),
-    FROM_SWIFT_BIC: z.string().default(""),
+    FROM_NAME: z.string(),
+    FROM_ADDRESS: z.string(),
+    FROM_VAT_NO: z.string(),
+    FROM_EMAIL: z.string().email(),
+    FROM_ACCOUNT_NUMBER: z.string(),
+    FROM_SWIFT_BIC: z.string(),
 
-    TO_NAME: z.string().default(""),
-    TO_ADDRESS: z.string().default(""),
-    TO_VAT_NO: z.string().default(""),
-    TO_EMAIL: z.string().default(""),
+    TO_NAME: z.string(),
+    TO_ADDRESS: z.string(),
+    TO_VAT_NO: z.string(),
+    TO_EMAIL: z.string().email(),
 
-    INVOICE_NET_PRICE: z.string().default(""),
-    INVOICE_EMAIL_RECIPIENT: z.string().default(""),
-    INVOICE_EMAIL_COMPANY_TO: z.string().default(""),
+    INVOICE_NET_PRICE: z.string(),
+    INVOICE_EMAIL_RECIPIENT: z.string().email(),
+    INVOICE_EMAIL_COMPANY_TO: z.string().email(),
 
-    GOOGLE_DRIVE_PARENT_FOLDER_ID: z.string().default(""),
-    GOOGLE_DRIVE_CLIENT_EMAIL: z.string().default(""),
-    GOOGLE_DRIVE_PRIVATE_KEY: z.string().default(""),
+    GOOGLE_DRIVE_PARENT_FOLDER_ID: z.string(),
+    GOOGLE_DRIVE_CLIENT_EMAIL: z.string().email(),
+    GOOGLE_DRIVE_PRIVATE_KEY: z.string(),
 
-    GITHUB_TOKEN: z.string().default(""),
+    GITHUB_TOKEN: z.string(),
   },
   client: {
-    NEXT_PUBLIC_SENTRY_DSN: z.string().default(""),
+    NEXT_PUBLIC_SENTRY_DSN: z.string(),
   },
   // If you're using Next.js < 13.4.4, you'll need to specify the runtimeEnv manually
   runtimeEnv: {
