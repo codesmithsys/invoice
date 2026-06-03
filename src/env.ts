@@ -1,6 +1,8 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+const e = (key: string) => process.env[key] ?? "";
+
 export const env = createEnv({
   server: {
     AUTH_TOKEN: z.string(),
@@ -16,21 +18,21 @@ export const env = createEnv({
     FROM_NAME: z.string(),
     FROM_ADDRESS: z.string(),
     FROM_VAT_NO: z.string(),
-    FROM_EMAIL: z.string().email(),
+    FROM_EMAIL: z.string(),
     FROM_ACCOUNT_NUMBER: z.string(),
     FROM_SWIFT_BIC: z.string(),
 
     TO_NAME: z.string(),
     TO_ADDRESS: z.string(),
     TO_VAT_NO: z.string(),
-    TO_EMAIL: z.string().email(),
+    TO_EMAIL: z.string(),
 
     INVOICE_NET_PRICE: z.string(),
-    INVOICE_EMAIL_RECIPIENT: z.string().email(),
-    INVOICE_EMAIL_COMPANY_TO: z.string().email(),
+    INVOICE_EMAIL_RECIPIENT: z.string(),
+    INVOICE_EMAIL_COMPANY_TO: z.string(),
 
     GOOGLE_DRIVE_PARENT_FOLDER_ID: z.string(),
-    GOOGLE_DRIVE_CLIENT_EMAIL: z.string().email(),
+    GOOGLE_DRIVE_CLIENT_EMAIL: z.string(),
     GOOGLE_DRIVE_PRIVATE_KEY: z.string(),
 
     GITHUB_TOKEN: z.string(),
@@ -38,41 +40,39 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_SENTRY_DSN: z.string(),
   },
-  // If you're using Next.js < 13.4.4, you'll need to specify the runtimeEnv manually
   runtimeEnv: {
-    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    NEXT_PUBLIC_SENTRY_DSN: e("NEXT_PUBLIC_SENTRY_DSN"),
 
-    AUTH_TOKEN: process.env.AUTH_TOKEN,
+    AUTH_TOKEN: e("AUTH_TOKEN"),
 
-    RESEND_API_KEY: process.env.RESEND_API_KEY,
+    RESEND_API_KEY: e("RESEND_API_KEY"),
 
-    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
-    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
+    UPSTASH_REDIS_REST_URL: e("UPSTASH_REDIS_REST_URL"),
+    UPSTASH_REDIS_REST_TOKEN: e("UPSTASH_REDIS_REST_TOKEN"),
 
-    TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
-    TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID,
+    TELEGRAM_BOT_TOKEN: e("TELEGRAM_BOT_TOKEN"),
+    TELEGRAM_CHAT_ID: e("TELEGRAM_CHAT_ID"),
 
-    FROM_NAME: process.env.FROM_NAME,
-    FROM_ADDRESS: process.env.FROM_ADDRESS,
-    FROM_VAT_NO: process.env.FROM_VAT_NO,
-    FROM_EMAIL: process.env.FROM_EMAIL,
-    FROM_ACCOUNT_NUMBER: process.env.FROM_ACCOUNT_NUMBER,
-    FROM_SWIFT_BIC: process.env.FROM_SWIFT_BIC,
+    FROM_NAME: e("FROM_NAME"),
+    FROM_ADDRESS: e("FROM_ADDRESS"),
+    FROM_VAT_NO: e("FROM_VAT_NO"),
+    FROM_EMAIL: e("FROM_EMAIL"),
+    FROM_ACCOUNT_NUMBER: e("FROM_ACCOUNT_NUMBER"),
+    FROM_SWIFT_BIC: e("FROM_SWIFT_BIC"),
 
-    TO_NAME: process.env.TO_NAME,
-    TO_ADDRESS: process.env.TO_ADDRESS,
-    TO_VAT_NO: process.env.TO_VAT_NO,
-    TO_EMAIL: process.env.TO_EMAIL,
+    TO_NAME: e("TO_NAME"),
+    TO_ADDRESS: e("TO_ADDRESS"),
+    TO_VAT_NO: e("TO_VAT_NO"),
+    TO_EMAIL: e("TO_EMAIL"),
 
-    INVOICE_NET_PRICE: process.env.INVOICE_NET_PRICE,
-    INVOICE_EMAIL_RECIPIENT: process.env.INVOICE_EMAIL_RECIPIENT,
-    INVOICE_EMAIL_COMPANY_TO: process.env.INVOICE_EMAIL_COMPANY_TO,
+    INVOICE_NET_PRICE: e("INVOICE_NET_PRICE"),
+    INVOICE_EMAIL_RECIPIENT: e("INVOICE_EMAIL_RECIPIENT"),
+    INVOICE_EMAIL_COMPANY_TO: e("INVOICE_EMAIL_COMPANY_TO"),
 
-    GOOGLE_DRIVE_PARENT_FOLDER_ID: process.env.GOOGLE_DRIVE_PARENT_FOLDER_ID,
-    GOOGLE_DRIVE_CLIENT_EMAIL: process.env.GOOGLE_DRIVE_CLIENT_EMAIL,
-    GOOGLE_DRIVE_PRIVATE_KEY: process.env.GOOGLE_DRIVE_PRIVATE_KEY,
+    GOOGLE_DRIVE_PARENT_FOLDER_ID: e("GOOGLE_DRIVE_PARENT_FOLDER_ID"),
+    GOOGLE_DRIVE_CLIENT_EMAIL: e("GOOGLE_DRIVE_CLIENT_EMAIL"),
+    GOOGLE_DRIVE_PRIVATE_KEY: e("GOOGLE_DRIVE_PRIVATE_KEY"),
 
-    GITHUB_TOKEN: process.env.GITHUB_TOKEN,
+    GITHUB_TOKEN: e("GITHUB_TOKEN"),
   },
-  // emptyStringAsUndefined: true,
 });
