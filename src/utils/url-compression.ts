@@ -8,8 +8,8 @@
 import type {
   InvoiceData,
   InvoiceItemData,
-  SellerData,
-  BuyerData,
+  FromData,
+  ToData,
 } from "@/app/schema";
 
 /**
@@ -20,10 +20,10 @@ type AllInvoiceKeys =
   | keyof InvoiceData
   // Invoice number object keys
   | keyof NonNullable<InvoiceData["invoiceNumberObject"]>
-  // Seller data keys
-  | keyof SellerData
-  // Buyer data keys
-  | keyof BuyerData
+  // From data keys
+  | keyof FromData
+  // To data keys
+  | keyof ToData
   // Invoice item keys
   | keyof InvoiceItemData;
 

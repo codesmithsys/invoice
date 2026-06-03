@@ -258,13 +258,13 @@ export const GeneralInformation = memo(function GeneralInformation({
                   // Update SELLER VAT NO (Account Number) LABEL TEXT when language changes
                   setValue(
                     "seller.vatNoLabelText",
-                    INVOICE_PDF_TRANSLATIONS[newLanguage].seller.vatNo,
+                    INVOICE_PDF_TRANSLATIONS[newLanguage].from.vatNo,
                   );
 
                   // Update BUYER VAT NO (Account Number) LABEL TEXT when language changes
                   setValue(
                     "buyer.vatNoLabelText",
-                    INVOICE_PDF_TRANSLATIONS[newLanguage].buyer.vatNo,
+                    INVOICE_PDF_TRANSLATIONS[newLanguage].to.vatNo,
                   );
 
                   const newTranslation =

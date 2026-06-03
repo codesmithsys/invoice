@@ -1,7 +1,7 @@
 "use client";
 
-import { type BuyerData, type InvoiceData } from "@/app/schema";
-import { BuyerManagement } from "@/app/(app)/components/invoice-form/sections/components/buyer/buyer-management";
+import { type ToData, type InvoiceData } from "@/app/schema";
+import { ToManagement } from "@/app/(app)/components/invoice-form/sections/components/buyer/buyer-management";
 import { AccordionContent } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { InputHelperMessage } from "@/components/ui/input-helper-message";
@@ -22,7 +22,7 @@ const ErrorMessage = ({ children }: { children: React.ReactNode }) => {
   return <p className="mt-1 text-xs text-red-600">{children}</p>;
 };
 
-interface BuyerInformationProps {
+interface ToInformationProps {
   control: Control<InvoiceData>;
   errors: FieldErrors<InvoiceData>;
   setValue: UseFormSetValue<InvoiceData>;
@@ -30,15 +30,15 @@ interface BuyerInformationProps {
   isMobile: boolean;
 }
 
-export const BuyerInformation = memo(function BuyerInformation({
+export const ToInformation = memo(function ToInformation({
   control,
   errors,
   setValue,
   invoiceData,
   isMobile,
-}: BuyerInformationProps) {
-  const [selectedBuyerId, setSelectedBuyerId] = useState("");
-  const isBuyerSelected = !!selectedBuyerId;
+}: ToInformationProps) {
+  const [selectedToId, setSelectedToId] = useState("");
+  const isToSelected = !!selectedToId;
 
   const currentFormValues = {
     name: invoiceData.buyer.name,
@@ -50,31 +50,31 @@ export const BuyerInformation = memo(function BuyerInformation({
     vatNoFieldIsVisible: invoiceData.buyer.vatNoFieldIsVisible,
     notes: invoiceData.buyer.notes,
     notesFieldIsVisible: invoiceData.buyer.notesFieldIsVisible,
-  } satisfies Partial<BuyerData>;
+  } satisfies Partial<ToData>;
 
   return (
     <div>
       <div className="relative flex items-end justify-end gap-2">
-        <BuyerManagement
+        <ToManagement
           setValue={setValue}
           invoiceData={invoiceData}
-          selectedBuyerId={selectedBuyerId}
-          setSelectedBuyerId={setSelectedBuyerId}
+          selectedToId={selectedToId}
+          setSelectedToId={setSelectedToId}
           formValues={currentFormValues}
           isMobile={isMobile}
         />
       </div>
       <AccordionContent className="">
-        <fieldset className="mt-5 space-y-4" disabled={isBuyerSelected}>
-          {isBuyerSelected ? (
+        <fieldset className="mt-5 space-y-4" disabled={isToSelected}>
+          {isToSelected ? (
             <div
               className="flex gap-2 rounded-md border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800 shadow-md shadow-blue-200/10"
-              data-testid="buyer-locked-banner"
+              data-testid="to-information-section"
             >
               <Info className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
               <p className="">
-                To modify buyer details, click the{" "}
-                <span className="font-semibold">Edit buyer</span> button (pencil
+                To modify to details, click the{" "}
+                <span className="font-semibold">Edit to</span> button (pencil
                 icon) next to the dropdown above.
               </p>
             </div>
@@ -115,7 +115,7 @@ export const BuyerInformation = memo(function BuyerInformation({
           <div>
             <fieldset className="rounded-md border px-4 pb-4">
               <legend className="text-base font-semibold lg:text-lg">
-                Buyer Tax Number
+                Tax Number
               </legend>
 
               <div className="mb-2 flex items-center justify-end">
@@ -131,7 +131,7 @@ export const BuyerInformation = memo(function BuyerInformation({
                         onCheckedChange={onChange}
                         className="h-5 w-8 [&_span]:size-4 [&_span]:data-[state=checked]:translate-x-3 rtl:[&_span]:data-[state=checked]:-translate-x-3"
                         data-testid="buyerVatNoFieldIsVisible"
-                        aria-label="Show the 'Buyer Tax Number' Field in the PDF"
+                        aria-label="Show the 'Tax Number' Field in the PDF"
                       />
                     )}
                   />
@@ -142,9 +142,9 @@ export const BuyerInformation = memo(function BuyerInformation({
                       </Label>
                     }
                     content={
-                      isBuyerSelected
+                      isToSelected
                         ? null
-                        : "Show the 'Buyer Tax Number' Field in the PDF"
+                        : "Show the 'Tax Number' Field in the PDF"
                     }
                   />
                 </div>
@@ -229,7 +229,7 @@ export const BuyerInformation = memo(function BuyerInformation({
                     </Label>
                   }
                   content={
-                    isBuyerSelected ? null : "Show the 'Email' field in the PDF"
+                    isToSelected ? null : "Show the 'Email' field in the PDF"
                   }
                 />
               </div>
@@ -274,7 +274,7 @@ export const BuyerInformation = memo(function BuyerInformation({
                     </Label>
                   }
                   content={
-                    isBuyerSelected ? null : "Show the 'Notes' field in the PDF"
+                    isToSelected ? null : "Show the 'Notes' field in the PDF"
                   }
                 />
               </div>

@@ -3,7 +3,7 @@ import type { InvoiceData } from "@/app/schema";
 import { INVOICE_PDF_TRANSLATIONS } from "@/app/(app)/pdf-i18n-translations/pdf-translations";
 import type { PDF_DEFAULT_TEMPLATE_STYLES } from ".";
 
-export function InvoiceSellerBuyerInfo({
+export function InvoiceFromToInfo({
   invoiceData,
   styles,
 }: {
@@ -23,9 +23,9 @@ export function InvoiceSellerBuyerInfo({
         maxWidth: "512px",
       }}
     >
-      {/* Seller info */}
+      {/* From info */}
       <View style={{ width: "280px", marginRight: 25 }}>
-        <Text style={styles.subheader}>{t.seller.name}</Text>
+        <Text style={styles.subheader}>{t.from.name}</Text>
         <View>
           <Text style={[styles.fontBold, styles.fontSize10]}>
             {invoiceData?.seller.name}
@@ -45,7 +45,7 @@ export function InvoiceSellerBuyerInfo({
             ) : null}
             {invoiceData.seller.emailFieldIsVisible ? (
               <Text style={styles.fontSize7}>
-                {t.seller.email}:{" "}
+                {t.from.email}:{" "}
                 <Text style={[styles.boldText, styles.fontSize8]}>
                   {invoiceData?.seller.email}
                 </Text>
@@ -57,7 +57,7 @@ export function InvoiceSellerBuyerInfo({
         <View style={{ marginTop: 10 }}>
           {invoiceData.seller.accountNumberFieldIsVisible ? (
             <Text style={styles.fontSize8}>
-              {t.seller.accountNumber} -{" "}
+              {t.from.accountNumber} -{" "}
               <Text style={[styles.boldText, styles.fontSize8]}>
                 {invoiceData?.seller.accountNumber}
               </Text>
@@ -65,7 +65,7 @@ export function InvoiceSellerBuyerInfo({
           ) : null}
           {invoiceData.seller.swiftBicFieldIsVisible ? (
             <Text style={styles.fontSize8}>
-              {t.seller.swiftBic}:{" "}
+              {t.from.swiftBic}:{" "}
               <Text style={[styles.boldText, styles.fontSize8]}>
                 {invoiceData?.seller.swiftBic}
               </Text>
@@ -82,9 +82,9 @@ export function InvoiceSellerBuyerInfo({
         </View>
       </View>
 
-      {/* Buyer info */}
+      {/* To info */}
       <View style={{ width: "280px" }}>
-        <Text style={styles.subheader}>{t.buyer.name}</Text>
+        <Text style={styles.subheader}>{t.to.name}</Text>
         <Text style={[styles.fontBold, styles.fontSize10]}>
           {invoiceData?.buyer.name}
         </Text>
@@ -105,7 +105,7 @@ export function InvoiceSellerBuyerInfo({
           ) : null}
           {invoiceData.buyer.emailFieldIsVisible ? (
             <Text style={styles.fontSize7}>
-              {t.buyer.email}:{" "}
+              {t.to.email}:{" "}
               <Text style={[styles.boldText, styles.fontSize8]}>
                 {invoiceData?.buyer.email}
               </Text>

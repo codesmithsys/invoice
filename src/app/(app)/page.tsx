@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { AppPageClient } from "./page.client";
 import { APP_URL, STATIC_ASSETS_URL, TWITTER_CREATOR } from "@/config";
 import { fetchGithubStars } from "@/actions/fetch-github-stars";
-import { CTAToastProvider } from "./contexts/cta-toast-context";
 
 const APP_PAGE_DESCRIPTION =
   "Create invoices online for free with our PDF invoice generator. Customize templates, download instantly, no signup required.";
@@ -158,8 +157,6 @@ export default async function AppPage() {
   const githubStarsCount = await fetchGithubStars();
 
   return (
-    <CTAToastProvider>
-      <AppPageClient githubStarsCount={githubStarsCount} />
-    </CTAToastProvider>
+    <AppPageClient githubStarsCount={githubStarsCount} />
   );
 }

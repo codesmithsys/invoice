@@ -4,8 +4,8 @@ import {
   type SupportedLanguages,
 } from "../../schema/index";
 
-// Schema for seller translations
-const sellerTranslationSchema = z
+// Schema for "from" (sender) translations
+const fromTranslationSchema = z
   .object({
     name: z.string(),
     vatNo: z.string(),
@@ -15,8 +15,8 @@ const sellerTranslationSchema = z
   })
   .strict();
 
-// Schema for buyer translations
-const buyerTranslationSchema = z
+// Schema for "to" (recipient) translations
+const toTranslationSchema = z
   .object({
     name: z.string(),
     vatNo: z.string(),
@@ -173,8 +173,8 @@ export const translationSchema = z
     dateOfIssue: z.string(),
     dateOfService: z.string(),
     invoiceType: z.string(),
-    seller: sellerTranslationSchema,
-    buyer: buyerTranslationSchema,
+    from: fromTranslationSchema,
+    to: toTranslationSchema,
     invoiceItemsTable: invoiceItemsTableTranslationSchema,
     paymentInfo: paymentInfoTranslationSchema,
     vatSummaryTable: vatSummaryTableTranslationSchema,
@@ -216,15 +216,15 @@ export const INVOICE_PDF_TRANSLATIONS = {
     dateOfIssue: "Date of issue",
     dateOfService: "Date of sales/of executing the service",
     invoiceType: "Invoice Type",
-    seller: {
-      name: "Seller",
+    from: {
+      name: "From",
       vatNo: "VAT no",
       email: "e-mail",
       accountNumber: "Account Number",
       swiftBic: "SWIFT/BIC number",
     },
-    buyer: {
-      name: "Buyer",
+    to: {
+      name: "To",
       vatNo: "VAT no",
       email: "e-mail",
     },
@@ -338,14 +338,14 @@ export const INVOICE_PDF_TRANSLATIONS = {
     dateOfIssue: "Data wystawienia",
     dateOfService: "Data sprzedaży / wykonania usługi",
     invoiceType: "Typ faktury",
-    seller: {
+    from: {
       name: "Sprzedawca",
       vatNo: "NIP",
       email: "E-mail",
       accountNumber: "Nr konta",
       swiftBic: "Nr SWIFT/BIC",
     },
-    buyer: {
+    to: {
       name: "Nabywca",
       vatNo: "NIP",
       email: "E-mail",
@@ -425,14 +425,14 @@ export const INVOICE_PDF_TRANSLATIONS = {
     dateOfIssue: "Ausstellungsdatum",
     dateOfService: "Verkaufsdatum/Leistungsdatum",
     invoiceType: "Rechnungstyp",
-    seller: {
+    from: {
       name: "Verkäufer",
       vatNo: "USt-IdNr",
       email: "E-Mail",
       accountNumber: "Kontonummer",
       swiftBic: "SWIFT/BIC",
     },
-    buyer: {
+    to: {
       name: "Käufer",
       vatNo: "USt-IdNr",
       email: "E-Mail",
@@ -512,14 +512,14 @@ export const INVOICE_PDF_TRANSLATIONS = {
     dateOfIssue: "Fecha de emisión",
     dateOfService: "Fecha de venta/prestación del servicio",
     invoiceType: "Tipo de factura",
-    seller: {
+    from: {
       name: "Vendedor",
       vatNo: "NIF/CIF",
       email: "Correo electrónico",
       accountNumber: "Número de cuenta",
       swiftBic: "SWIFT/BIC",
     },
-    buyer: {
+    to: {
       name: "Comprador",
       vatNo: "NIF/CIF",
       email: "Correo electrónico",
@@ -599,14 +599,14 @@ export const INVOICE_PDF_TRANSLATIONS = {
     dateOfIssue: "Data de emissão",
     dateOfService: "Data de venda/prestação do serviço",
     invoiceType: "Tipo de fatura",
-    seller: {
+    from: {
       name: "Vendedor",
       vatNo: "NIF",
       email: "E-mail",
       accountNumber: "Número da conta",
       swiftBic: "SWIFT/BIC",
     },
-    buyer: {
+    to: {
       name: "Comprador",
       vatNo: "NIF",
       email: "E-mail",
@@ -686,14 +686,14 @@ export const INVOICE_PDF_TRANSLATIONS = {
     dateOfIssue: "Дата выставления",
     dateOfService: "Дата продажи/оказания услуги",
     invoiceType: "Тип счёта",
-    seller: {
+    from: {
       name: "Продавец",
       vatNo: "ИНН",
       email: "Эл. почта",
       accountNumber: "Номер счёта",
       swiftBic: "SWIFT/BIC",
     },
-    buyer: {
+    to: {
       name: "Покупатель",
       vatNo: "ИНН",
       email: "Эл. почта",
@@ -773,14 +773,14 @@ export const INVOICE_PDF_TRANSLATIONS = {
     dateOfIssue: "Дата виставлення",
     dateOfService: "Дата продажу/надання послуги",
     invoiceType: "Тип рахунку",
-    seller: {
+    from: {
       name: "Продавець",
       vatNo: "ІПН",
       email: "Ел. пошта",
       accountNumber: "Номер рахунку",
       swiftBic: "SWIFT/BIC",
     },
-    buyer: {
+    to: {
       name: "Покупець",
       vatNo: "ІПН",
       email: "Ел. пошта",
@@ -860,14 +860,14 @@ export const INVOICE_PDF_TRANSLATIONS = {
     dateOfIssue: "Date d'émission",
     dateOfService: "Date de vente/prestation de service",
     invoiceType: "Type de facture",
-    seller: {
+    from: {
       name: "Vendeur",
       vatNo: "N° TVA",
       email: "E-mail",
       accountNumber: "Numéro de compte",
       swiftBic: "SWIFT/BIC",
     },
-    buyer: {
+    to: {
       name: "Acheteur",
       vatNo: "N° TVA",
       email: "E-mail",
@@ -947,14 +947,14 @@ export const INVOICE_PDF_TRANSLATIONS = {
     dateOfIssue: "Data di emissione",
     dateOfService: "Data di vendita/prestazione del servizio",
     invoiceType: "Tipo di fattura",
-    seller: {
+    from: {
       name: "Venditore",
       vatNo: "P.IVA",
       email: "E-mail",
       accountNumber: "Numero di conto",
       swiftBic: "SWIFT/BIC",
     },
-    buyer: {
+    to: {
       name: "Acquirente",
       vatNo: "P.IVA",
       email: "E-mail",
@@ -1034,14 +1034,14 @@ export const INVOICE_PDF_TRANSLATIONS = {
     dateOfIssue: "Uitgiftedatum",
     dateOfService: "Datum van verkoop/dienstverlening",
     invoiceType: "Factuurtype",
-    seller: {
+    from: {
       name: "Verkoper",
       vatNo: "BTW-nummer",
       email: "E-mail",
       accountNumber: "Rekeningnummer",
       swiftBic: "SWIFT/BIC",
     },
-    buyer: {
+    to: {
       name: "Koper",
       vatNo: "BTW-nummer",
       email: "E-mail",

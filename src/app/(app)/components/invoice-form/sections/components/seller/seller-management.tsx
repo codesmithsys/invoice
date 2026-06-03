@@ -21,29 +21,29 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import type { UseFormSetValue } from "react-hook-form";
-import { sellerSchema, type InvoiceData, type SellerData } from "@/app/schema";
+import { fromSchema, type InvoiceData, type FromData } from "@/app/schema";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { isLocalStorageAvailable } from "@/lib/check-local-storage";
 import { umamiTrackEvent } from "@/lib/umami-analytics-track-event";
 import * as Sentry from "@sentry/nextjs";
-import { DEFAULT_SELLER_DATA } from "@/app/constants";
-import { SellerDialog } from "@/app/(app)/components/invoice-form/sections/components/seller/seller-dialog";
+import { DEFAULT_FROM_DATA } from "@/app/constants";
+import { FromDialog } from "@/app/(app)/components/invoice-form/sections/components/seller/seller-dialog";
 
-export const SELLERS_LOCAL_STORAGE_KEY = "EASY_INVOICE_PDF_SELLERS";
+export const FROMS_LOCAL_STORAGE_KEY = "EASY_INVOICE_PDF_SELLERS";
 
-interface SellerManagementProps {
+interface FromManagementProps {
   setValue: UseFormSetValue<InvoiceData>;
   invoiceData: InvoiceData;
-  selectedSellerId: string;
-  setSelectedSellerId: Dispatch<SetStateAction<string>>;
-  formValues?: Partial<SellerData>;
+  selectedFromId: string;
+  setSelectedFromId: Dispatch<SetStateAction<string>>;
+  formValues?: Partial<FromData>;
   isMobile: boolean;
 }
 
 /**
- * SellerManagement Component
+ * FromManagement Component
  *
  * Manages seller data for invoices including:
  * - Loading and displaying saved sellers from localStorage
@@ -58,53 +58,53 @@ interface SellerManagementProps {
  *
  * @param setValue - React Hook Form setter to update invoice form values
  * @param invoiceData - Current invoice data including seller information
- * @param selectedSellerId - ID of the currently selected seller
- * @param setSelectedSellerId - Callback to update the selected seller ID
+ * @param selectedFromId - ID of the currently selected seller
+ * @param setSelectedFromId - Callback to update the selected seller ID
  * @param formValues - Current seller form values (optional)
  */
-export function SellerManagement({
+export function FromManagement({
   setValue,
   invoiceData,
-  selectedSellerId,
-  setSelectedSellerId,
+  selectedFromId,
+  setSelectedFromId,
   formValues,
   isMobile,
-}: SellerManagementProps) {
-  const [isSellerDialogOpen, setIsSellerDialogOpen] = useState(false);
+}: FromManagementProps) {
+  const [isFromDialogOpen, setIsFromDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  // State to store the list of saved sellers for the dropdown selection.
+  // State to store the list of saved froms for the dropdown selection.
   const [sellersSelectOptions, setSellersSelectOptions] = useState<
-    SellerData[]
+    FromData[]
   >([]);
 
-  // State to track the seller currently being edited (null if not editing).
-  const [editingSeller, setEditingSeller] = useState<SellerData | null>(null);
+  // State to track the from currently being edited (null if not editing).
+  const [editingSeller, setEditingSeller] = useState<FromData | null>(null);
 
   const sellerSelectId = useId();
 
   const isEditMode = Boolean(editingSeller);
 
-  // Load sellers from localStorage on component mount
+  // Load froms from localStorage on component mount
   useEffect(() => {
     try {
-      const savedSellers = localStorage.getItem(SELLERS_LOCAL_STORAGE_KEY);
+      const savedSellers = localStorage.getItem(FROMS_LOCAL_STORAGE_KEY);
       const parsedSellers: unknown = savedSellers
         ? JSON.parse(savedSellers)
         : [];
 
       const rawSellers = Array.isArray(parsedSellers) ? parsedSellers : [];
 
-      const validSellers: SellerData[] = [];
-      const invalidSellers: SellerData[] = [];
+      const validSellers: FromData[] = [];
+      const invalidSellers: FromData[] = [];
 
-      // Validate each seller individually — drop only invalid items
+      // Validate each from individually — drop only invalid items
       for (const item of rawSellers) {
-        const result = sellerSchema.safeParse(item);
+        const result = fromSchema.safeParse(item);
         if (result.success) {
           validSellers.push(result.data);
         } else {
-          invalidSellers.push(item as SellerData);
+          invalidSellers.push(item as FromData);
 
           console.error(
             "[seller-management] Invalid seller entry:",
@@ -113,7 +113,7 @@ export function SellerManagement({
         }
       }
 
-      // If we have invalid sellers, drop them and save the valid sellers back to localStorage
+      // If we have invalid froms, drop them and save the valid froms back to localStorage
       if (invalidSellers.length > 0) {
         console.error(
           `[seller-management] Dropped ${invalidSellers.length} invalid seller entries:`,
@@ -127,27 +127,27 @@ export function SellerManagement({
         );
 
         localStorage.setItem(
-          SELLERS_LOCAL_STORAGE_KEY,
+          FROMS_LOCAL_STORAGE_KEY,
           JSON.stringify(validSellers),
         );
       }
 
-      const selectedSeller = validSellers.find((seller: SellerData) => {
+      const selectedFrom = validSellers.find((seller: FromData) => {
         return seller?.id === invoiceData?.seller?.id;
       });
 
       setSellersSelectOptions(validSellers);
-      setSelectedSellerId(selectedSeller?.id ?? "");
+      setSelectedFromId(selectedFrom?.id ?? "");
     } catch (error) {
       console.error("Failed to load sellers:", error);
 
       Sentry.captureException(error);
     }
-  }, [invoiceData?.seller?.id, setSelectedSellerId]);
+  }, [invoiceData?.seller?.id, setSelectedFromId]);
 
-  // Update sellers when a new one is added
+  // Update froms when a new one is added
   const handleSellerAdd = (
-    newSeller: SellerData,
+    newSeller: FromData,
     {
       shouldApplyNewSellerToInvoice,
     }: { shouldApplyNewSellerToInvoice: boolean },
@@ -155,31 +155,31 @@ export function SellerManagement({
     try {
       const newSellerWithId = {
         ...newSeller,
-        // Generate a unique ID for the new seller (IMPORTANT!) =)
+        // Generate a unique ID for the new from (IMPORTANT!) =)
         id: Date.now().toString(),
-      } satisfies SellerData;
+      } satisfies FromData;
 
       const newSellers = [...sellersSelectOptions, newSellerWithId];
 
       // Save to localStorage
       localStorage.setItem(
-        SELLERS_LOCAL_STORAGE_KEY,
+        FROMS_LOCAL_STORAGE_KEY,
         JSON.stringify(newSellers),
       );
 
       // Update the sellers state
       setSellersSelectOptions(newSellers);
 
-      // Apply the new seller to the invoice if the user wants to, otherwise just add it to the list and use it later if needed
+      // Apply the new from to the invoice if the user wants to, otherwise just add it to the list and use it later if needed
       if (shouldApplyNewSellerToInvoice) {
         setValue("seller", newSellerWithId);
-        setSelectedSellerId(newSellerWithId?.id);
+        setSelectedFromId(newSellerWithId?.id);
       }
 
       toast.success(
         shouldApplyNewSellerToInvoice
-          ? "Seller added and applied to invoice"
-          : "Seller added successfully",
+          ? "From added and applied to invoice"
+          : "From added successfully",
         {
           id: "add_seller_success_toast",
           richColors: true,
@@ -188,12 +188,12 @@ export function SellerManagement({
       );
 
       // analytics track event
-      umamiTrackEvent("add_seller_success");
+      umamiTrackEvent("add_from_success");
     } catch (error) {
       console.error("Failed to add seller:", error);
 
-      toast.error("Failed to add seller", {
-        id: "add_seller_error_toast",
+      toast.error("Failed to add from", {
+        id: "add_from_error_toast",
         description: "Please try again",
         closeButton: true,
         position: isMobile ? "top-center" : "bottom-right",
@@ -203,15 +203,15 @@ export function SellerManagement({
     }
   };
 
-  // Update sellers when edited
-  const handleSellerEdit = (editedSeller: SellerData) => {
+  // Update froms when edited
+  const handleSellerEdit = (editedSeller: FromData) => {
     try {
       const updatedSellers = sellersSelectOptions.map((seller) =>
         seller.id === editedSeller.id ? editedSeller : seller,
       );
 
       localStorage.setItem(
-        SELLERS_LOCAL_STORAGE_KEY,
+        FROMS_LOCAL_STORAGE_KEY,
         JSON.stringify(updatedSellers),
       );
 
@@ -221,19 +221,19 @@ export function SellerManagement({
       // end edit mode
       setEditingSeller(null);
 
-      toast.success("Seller updated successfully", {
-        id: "edit_seller_success_toast",
+      toast.success("From updated successfully", {
+        id: "edit_from_success_toast",
         richColors: true,
         position: isMobile ? "top-center" : "bottom-right",
       });
 
       // analytics track event
-      umamiTrackEvent("edit_seller_success");
+      umamiTrackEvent("edit_from_success");
     } catch (error) {
       console.error("Failed to edit seller:", error);
 
-      toast.error("Failed to edit seller", {
-        id: "edit_seller_error_toast",
+      toast.error("Failed to edit from", {
+        id: "edit_from_error_toast",
         description: "Please try again",
         closeButton: true,
         position: isMobile ? "top-center" : "bottom-right",
@@ -247,69 +247,69 @@ export function SellerManagement({
     const id = event.target.value;
 
     if (id) {
-      setSelectedSellerId(id);
+      setSelectedFromId(id);
       const selectedSeller = sellersSelectOptions.find(
         (seller) => seller.id === id,
       );
 
       if (selectedSeller) {
         setValue("seller", selectedSeller);
-        toast.success(`Seller "${selectedSeller.name}" applied to invoice`, {
-          id: "change_seller_success_toast",
+        toast.success(`From "${selectedSeller.name}" applied to invoice`, {
+          id: "change_from_success_toast",
           richColors: true,
           position: isMobile ? "top-center" : "bottom-right",
         });
       }
     } else {
-      // Clear the seller from the form if the user selects the empty option
-      setSelectedSellerId("");
-      setValue("seller", DEFAULT_SELLER_DATA);
+      // Clear the from from the form if the user selects the empty option
+      setSelectedFromId("");
+      setValue("seller", DEFAULT_FROM_DATA);
 
-      toast.success("Seller restored to default", {
-        id: "reset_seller_success_toast",
+      toast.success("From restored to default", {
+        id: "reset_from_success_toast",
         richColors: true,
         position: isMobile ? "top-center" : "bottom-right",
       });
     }
 
     // analytics track event
-    umamiTrackEvent("change_seller");
+    umamiTrackEvent("change_from");
   };
 
   const handleDeleteSeller = () => {
     try {
       setSellersSelectOptions((prevSellers) => {
         const updatedSellers = prevSellers.filter(
-          (seller) => seller.id !== selectedSellerId,
+          (seller) => seller.id !== selectedFromId,
         );
 
         localStorage.setItem(
-          SELLERS_LOCAL_STORAGE_KEY,
+          FROMS_LOCAL_STORAGE_KEY,
           JSON.stringify(updatedSellers),
         );
         return updatedSellers;
       });
-      // Clear the selected seller index
-      setSelectedSellerId("");
-      // Clear the seller from the form if it was selected
-      setValue("seller", DEFAULT_SELLER_DATA);
+      // Clear the selected from index
+      setSelectedFromId("");
+      // Clear the from from the form if it was selected
+      setValue("seller", DEFAULT_FROM_DATA);
 
       // Close the delete dialog
       setIsDeleteDialogOpen(false);
 
-      toast.success("Seller deleted successfully", {
-        id: "delete_seller_success_toast",
+      toast.success("From deleted successfully", {
+        id: "delete_from_success_toast",
         richColors: true,
         position: isMobile ? "top-center" : "bottom-right",
       });
 
       // analytics track event
-      umamiTrackEvent("delete_seller_success");
+      umamiTrackEvent("delete_from_success");
     } catch (error) {
       console.error("Failed to delete seller:", error);
 
-      toast.error("Failed to delete seller", {
-        id: "delete_seller_error_toast",
+      toast.error("Failed to delete from", {
+        id: "delete_from_error_toast",
         description: "Please try again",
         closeButton: true,
         position: isMobile ? "top-center" : "bottom-right",
@@ -320,7 +320,7 @@ export function SellerManagement({
   };
 
   const activeSeller = sellersSelectOptions.find(
-    (seller) => seller.id === selectedSellerId,
+    (seller) => seller.id === selectedFromId,
   );
 
   const hasSellers = sellersSelectOptions.length > 0;
@@ -339,7 +339,7 @@ export function SellerManagement({
           <div className="w-full space-y-1">
             <div className="flex items-center gap-1">
               <Label htmlFor={sellerSelectId} className="">
-                Select Seller
+                Select From
               </Label>
             </div>
             <div className="flex w-full gap-2">
@@ -347,13 +347,13 @@ export function SellerManagement({
                 id={sellerSelectId}
                 className={cn(
                   "block h-8 w-full text-[12px]",
-                  !selectedSellerId && "italic text-gray-700",
+                  !selectedFromId && "italic text-gray-700",
                 )}
                 onChange={handleSellerChange}
-                value={selectedSellerId}
+                value={selectedFromId}
                 title={activeSeller?.name}
               >
-                <option value="">No seller selected (default)</option>
+                <option value="">No from selected (default)</option>
                 {sellersSelectOptions.map((seller) => (
                   <option key={seller.id} value={seller.id}>
                     {seller.name}
@@ -361,7 +361,7 @@ export function SellerManagement({
                 ))}
               </SelectNative>
 
-              {selectedSellerId ? (
+              {selectedFromId ? (
                 <div className="flex items-center gap-2">
                   <CustomTooltip
                     trigger={
@@ -374,16 +374,16 @@ export function SellerManagement({
                             toast.dismiss();
 
                             setEditingSeller(activeSeller);
-                            setIsSellerDialogOpen(true);
+                            setIsFromDialogOpen(true);
                           }
                         }}
                         className="size-8 px-2"
                       >
-                        <span className="sr-only">Edit seller</span>
+                        <span className="sr-only">Edit from</span>
                         <Pencil className="size-3.5" />
                       </Button>
                     }
-                    content="Edit seller"
+                    content="Edit from"
                   />
                   <CustomTooltip
                     trigger={
@@ -398,11 +398,11 @@ export function SellerManagement({
                         }}
                         className="size-8 px-2"
                       >
-                        <span className="sr-only">Delete seller</span>
+                        <span className="sr-only">Delete from</span>
                         <Trash2 className="size-3.5" />
                       </Button>
                     }
-                    content="Delete seller"
+                    content="Delete from"
                   />
                 </div>
               ) : null}
@@ -422,11 +422,11 @@ export function SellerManagement({
                   // dismiss any existing toast for better UX
                   toast.dismiss();
 
-                  // open seller dialog
-                  setIsSellerDialogOpen(true);
+                  // open from dialog
+                  setIsFromDialogOpen(true);
                 } else {
-                  toast.error("Unable to add seller", {
-                    id: "unable-to-add-seller-error-toast",
+                  toast.error("Unable to add from", {
+                    id: "unable-to-add-from-error-toast",
                     closeButton: true,
                     description: (
                       <>
@@ -442,7 +442,7 @@ export function SellerManagement({
               }}
               aria-disabled={!isLocalStorageAvailable} // better UX than 'disabled'
             >
-              New Seller
+              New From
               <Plus className="ml-1 size-3" />
             </Button>
           }
@@ -451,10 +451,10 @@ export function SellerManagement({
               <div className="flex items-center gap-3 p-2">
                 <div className="space-y-1">
                   <p className="text-sm font-semibold text-slate-900">
-                    Save Sellers for Quick Access
+                    Save Froms for Quick Access
                   </p>
                   <p className="text-pretty text-xs leading-relaxed text-slate-700">
-                    Store multiple sellers to easily reuse their information in
+                    Store multiple froms to easily reuse their information in
                     future invoices. All data is saved locally in your browser.
                   </p>
                 </div>
@@ -468,7 +468,7 @@ export function SellerManagement({
                   </p>
                   <p className="text-pretty text-xs leading-relaxed text-red-700">
                     Local storage is not available in your browser. Please
-                    enable it or try another browser to save seller information.
+                    enable it or try another browser to save from information.
                   </p>
                 </div>
               </div>
@@ -477,12 +477,12 @@ export function SellerManagement({
         />
       </div>
 
-      <SellerDialog
+      <FromDialog
         // we need to rerender the dialog when the editingSeller changes
         key={editingSeller?.id}
-        isOpen={isSellerDialogOpen}
+        isOpen={isFromDialogOpen}
         onClose={() => {
-          setIsSellerDialogOpen(false);
+          setIsFromDialogOpen(false);
           setEditingSeller(null);
         }}
         handleSellerAdd={handleSellerAdd}
@@ -499,13 +499,13 @@ export function SellerManagement({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Seller</AlertDialogTitle>
+            <AlertDialogTitle>Delete From</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete{" "}
               <span className="font-bold">
                 &quot;{activeSeller?.name}&quot;
               </span>{" "}
-              seller? This action cannot be undone.
+              from? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

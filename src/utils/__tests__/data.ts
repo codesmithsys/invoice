@@ -1,8 +1,8 @@
 import type {
   InvoiceData,
   InvoiceItemData,
-  SellerData,
-  BuyerData,
+  FromData,
+  ToData,
 } from "@/app/schema";
 
 // Test data fixtures
@@ -21,7 +21,7 @@ const MOCK_SELLER_DATA = {
   notes: "Seller notes",
   notesFieldIsVisible: true,
   vatNoLabelText: "VAT no",
-} as const satisfies SellerData;
+} as const satisfies FromData;
 
 const MOCK_BUYER_DATA = {
   id: "buyer-456",
@@ -34,7 +34,7 @@ const MOCK_BUYER_DATA = {
   notes: "Buyer notes",
   notesFieldIsVisible: true,
   vatNoLabelText: "VAT no",
-} as const satisfies BuyerData;
+} as const satisfies ToData;
 
 export const MOCK_INVOICE_ITEM_DATA = {
   invoiceItemNumberIsVisible: true,

@@ -51,10 +51,10 @@ import { useDebouncedCallback } from "use-debounce";
 import { z } from "zod";
 
 import { AlertIcon, ErrorMessage } from "./common";
-import { BuyerInformation } from "./sections/buyer-information";
+import { ToInformation } from "./sections/buyer-information";
 import { GeneralInformation } from "./sections/general-information";
 import { InvoiceItems } from "./sections/invoice-items";
-import { SellerInformation } from "./sections/seller-information";
+import { FromInformation } from "./sections/seller-information";
 import { updateAppMetadata } from "@/app/(app)/utils/get-app-metadata";
 
 export const LOADING_BUTTON_TIMEOUT = 400;
@@ -63,14 +63,14 @@ const DEBOUNCE_TIMEOUT = 500;
 
 const DEFAULT_ACCORDION_VALUES = [
   "general",
-  "seller",
-  "buyer",
+  "from",
+  "to",
   "invoiceItems",
 ] as const;
 
 const ACCORDION_GENERAL = DEFAULT_ACCORDION_VALUES[0];
-const ACCORDION_SELLER = DEFAULT_ACCORDION_VALUES[1];
-const ACCORDION_BUYER = DEFAULT_ACCORDION_VALUES[2];
+const ACCORDION_FROM = DEFAULT_ACCORDION_VALUES[1];
+const ACCORDION_TO = DEFAULT_ACCORDION_VALUES[2];
 const ACCORDION_ITEMS = DEFAULT_ACCORDION_VALUES[3];
 
 type AccordionKeys = Array<(typeof DEFAULT_ACCORDION_VALUES)[number]>;
@@ -338,8 +338,8 @@ export const InvoiceForm = memo(function InvoiceForm({
       // parse the value to the accordion schema
       const stateToSave = accordionSchema.parse({
         general: value.includes(ACCORDION_GENERAL),
-        seller: value.includes(ACCORDION_SELLER),
-        buyer: value.includes(ACCORDION_BUYER),
+        seller: value.includes(ACCORDION_FROM),
+        buyer: value.includes(ACCORDION_TO),
         invoiceItems: value.includes(ACCORDION_ITEMS),
       });
 
@@ -382,19 +382,19 @@ export const InvoiceForm = memo(function InvoiceForm({
           </AccordionContent>
         </AccordionItem>
 
-        {/* Seller Information */}
+        {/* From Information */}
         <AccordionItem
-          value={ACCORDION_SELLER}
+          value={ACCORDION_FROM}
           className="rounded-lg border shadow"
           data-testid={`seller-information-section`}
         >
           <AccordionTrigger className="px-4 py-3">
             <div className="flex items-center gap-2">
-              <Legend>Seller Information</Legend>
+              <Legend>From</Legend>
             </div>
           </AccordionTrigger>
           <div className="px-4 pb-4">
-            <SellerInformation
+            <FromInformation
               control={control}
               errors={errors}
               setValue={setValue}
@@ -404,19 +404,19 @@ export const InvoiceForm = memo(function InvoiceForm({
           </div>
         </AccordionItem>
 
-        {/* Buyer Information */}
+        {/* To Information */}
         <AccordionItem
-          value={ACCORDION_BUYER}
+          value={ACCORDION_TO}
           className="rounded-lg border shadow"
           data-testid={`buyer-information-section`}
         >
           <AccordionTrigger className="px-4 py-3">
             <div className="flex items-center gap-2">
-              <Legend>Buyer Information</Legend>
+              <Legend>To</Legend>
             </div>
           </AccordionTrigger>
           <div className="px-4 pb-4">
-            <BuyerInformation
+            <ToInformation
               control={control}
               errors={errors}
               setValue={setValue}

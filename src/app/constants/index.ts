@@ -4,8 +4,8 @@ import {
   SUPPORTED_TEMPLATES,
   DEFAULT_DATE_FORMAT,
   type InvoiceData,
-  type SellerData,
-  type BuyerData,
+  type FromData,
+  type ToData,
 } from "../schema";
 import { INVOICE_PDF_TRANSLATIONS } from "../(app)/pdf-i18n-translations/pdf-translations";
 import dayjs from "dayjs";
@@ -26,38 +26,38 @@ export const INVOICE_DEFAULT_NUMBER_VALUE = `1/${INVOICE_CURRENT_MONTH_AND_YEAR}
  *
  * This is the default data that will be used if the user doesn't provide their own data
  */
-export const DEFAULT_SELLER_DATA = {
-  name: "Seller name",
-  address: "Seller address",
+export const DEFAULT_FROM_DATA = {
+  name: "From name",
+  address: "From address",
 
-  vatNo: "Seller vat number",
+  vatNo: "From tax number",
   vatNoLabelText: "VAT no",
   vatNoFieldIsVisible: true,
 
   email: "seller@email.com",
   emailFieldIsVisible: true,
 
-  accountNumber: "Seller account number",
+  accountNumber: "From account number",
   accountNumberFieldIsVisible: true,
 
-  swiftBic: "Seller swift bic",
+  swiftBic: "From SWIFT/BIC",
   swiftBicFieldIsVisible: true,
 
   // field for additional notes about the seller (not visible by default)
   notes: "",
   notesFieldIsVisible: true,
-} as const satisfies Omit<SellerData, "id">;
+} as const satisfies Omit<FromData, "id">;
 
 /**
  * Default buyer data
  *
  * This is the default data that will be used if the user doesn't provide their own data
  */
-export const DEFAULT_BUYER_DATA = {
-  name: "Buyer name",
-  address: "Buyer address",
+export const DEFAULT_TO_DATA = {
+  name: "To name",
+  address: "To address",
 
-  vatNo: "Buyer vat number",
+  vatNo: "To tax number",
   vatNoLabelText: "VAT no",
   vatNoFieldIsVisible: true,
 
@@ -67,7 +67,7 @@ export const DEFAULT_BUYER_DATA = {
   // field for additional notes about the buyer (not visible by default)
   notes: "",
   notesFieldIsVisible: true,
-} as const satisfies Omit<BuyerData, "id">;
+} as const satisfies Omit<ToData, "id">;
 
 /**
  * Initial invoice data
@@ -94,8 +94,8 @@ export const INITIAL_INVOICE_DATA = {
   invoiceType: "",
   invoiceTypeFieldIsVisible: true,
 
-  seller: DEFAULT_SELLER_DATA,
-  buyer: DEFAULT_BUYER_DATA,
+  seller: DEFAULT_FROM_DATA,
+  buyer: DEFAULT_TO_DATA,
 
   items: [
     {

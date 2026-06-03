@@ -17,7 +17,7 @@ import { StripeFooter } from "./stripe-footer";
 import { StripeInvoiceHeader } from "./stripe-invoice-header";
 import { StripeInvoiceInfo } from "./stripe-invoice-info";
 import { StripeItemsTable } from "./stripe-items-table";
-import { StripeSellerBuyerInfo } from "./stripe-seller-buyer-info";
+import { StripeFromToInfo } from "./stripe-seller-buyer-info";
 import { StripeVatSummaryTableTotals } from "./stripe-totals";
 import { formatCurrency } from "@/app/(app)/utils/format-currency";
 import { INVOICE_PDF_FONTS } from "@/config";
@@ -266,8 +266,8 @@ export const StripeInvoicePdfTemplate = memo(function StripeInvoicePdfTemplate({
             styles={STRIPE_TEMPLATE_STYLES}
           />
 
-          {/* Seller and buyer info */}
-          <StripeSellerBuyerInfo
+          {/* From and to info */}
+          <StripeFromToInfo
             invoiceData={invoiceData}
             styles={STRIPE_TEMPLATE_STYLES}
           />

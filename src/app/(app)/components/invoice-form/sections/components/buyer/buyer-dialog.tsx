@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { buyerSchema, type BuyerData } from "@/app/schema";
+import { toSchema, type ToData } from "@/app/schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -25,53 +25,53 @@ import { Switch } from "@/components/ui/switch";
 import { CustomTooltip } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { ConfirmDiscardDialog } from "../confirm-discard-dialog";
-import { BUYERS_LOCAL_STORAGE_KEY } from "./buyer-management";
+import { TOS_LOCAL_STORAGE_KEY } from "./buyer-management";
 import { useState, useEffect } from "react";
 import * as Sentry from "@sentry/nextjs";
 import { InputHelperMessage } from "../../../../../../../components/ui/input-helper-message";
 import { useConfirmDiscard } from "@/app/(app)/components/invoice-form/sections/hooks/use-confirm-discard";
 
-const BUYER_FORM_ID = "buyer-form";
+const TO_FORM_ID = "to-form";
 
-interface BuyerDialogProps {
+interface ToDialogProps {
   isOpen: boolean;
   onClose: React.Dispatch<React.SetStateAction<boolean>>;
-  handleBuyerAdd?: (
-    buyer: BuyerData,
-    { shouldApplyNewBuyerToInvoice }: { shouldApplyNewBuyerToInvoice: boolean },
+  handleToAdd?: (
+    to: ToData,
+    { shouldApplyNewToInvoice }: { shouldApplyNewToInvoice: boolean },
   ) => void;
-  handleBuyerEdit?: (buyer: BuyerData) => void;
-  initialData: BuyerData | null;
+  handleToEdit?: (to: ToData) => void;
+  initialData: ToData | null;
   isEditMode: boolean;
-  formValues?: Partial<BuyerData>;
+  formValues?: Partial<ToData>;
 }
 
 /**
- * BuyerDialog component for adding or editing buyer information.
+ * ToDialog component for adding or editing to information.
  *
- * This dialog provides a form interface for managing buyer data, including:
+ * This dialog provides a form interface for managing to data, including:
  * - Basic information (name, address, VAT number)
  * - Contact details (email)
  * - Additional notes
  *
  * Features:
- * - Pre-fill form with current invoice values (when creating new buyer)
- * - Apply newly created buyer to current invoice
- * - Validation for duplicate buyer names
+ * - Pre-fill form with current invoice values (when creating new to)
+ * - Apply newly created to to current invoice
+ * - Validation for duplicate to names
  * - Unsaved changes warning on dialog close
  * - Field visibility toggles for optional information
  */
-export function BuyerDialog({
+export function ToDialog({
   isOpen,
   onClose,
-  handleBuyerAdd,
-  handleBuyerEdit,
+  handleToAdd,
+  handleToEdit,
   initialData,
   isEditMode,
   formValues,
-}: BuyerDialogProps) {
-  const form = useForm<BuyerData>({
-    resolver: zodResolver(buyerSchema),
+}: ToDialogProps) {
+  const form = useForm<ToData>({
+    resolver: zodResolver(toSchema),
     defaultValues: {
       id: initialData?.id ?? "",
       name: initialData?.name ?? "",
@@ -91,8 +91,8 @@ export function BuyerDialog({
   const { isConfirmDiscardDialogOpen, setIsConfirmDiscardDialogOpen } =
     useConfirmDiscard();
 
-  // by default, we want to apply the new buyer to the current invoice
-  const [shouldApplyNewBuyerToInvoice, setShouldApplyNewBuyerToInvoice] =
+  // by default, we want to apply the new to to the current invoice
+  const [shouldApplyNewToInvoice, setShouldApplyNewToInvoice] =
     useState(true);
 
   // should apply inline form values to the dialog form
@@ -111,16 +111,16 @@ export function BuyerDialog({
   /**
    * Synchronizes form values based on the "Use current invoice data" switch state.
    *
-   * When creating a new buyer (not in edit mode):
-   * - If switch is ON: Populates the form with current invoice buyer data (formValues)
-   *   to allow users to save the current invoice's buyer information as a new saved buyer.
+   * When creating a new to (not in edit mode):
+   * - If switch is ON: Populates the form with current invoice to data (formValues)
+   *   to allow users to save the current invoice's to information as a new saved to.
    * - If switch is OFF: Resets the form to empty/default values or initialData
-   *   to allow users to enter completely new buyer information from scratch.
+   *   to allow users to enter completely new to information from scratch.
    *
-   * This effect does not run in edit mode to prevent overwriting the buyer being edited.
+   * This effect does not run in edit mode to prevent overwriting the to being edited.
    */
   useEffect(() => {
-    // Switch is ON: Pre-fill form with current invoice buyer data
+    // Switch is ON: Pre-fill form with current invoice to data
     if (shouldApplyInlineFormValues && formValues && !isEditMode) {
       form.reset({
         ...form.getValues(),
@@ -166,79 +166,79 @@ export function BuyerDialog({
   }
 
   /**
-   * Closes the buyer dialog and resets the form to its default state.
+   * Closes the to dialog and resets the form to its default state.
    */
   function closeDialog() {
     form.reset();
 
     // by default, we don't want to apply the inline form values to the dialog form
     setShouldApplyInlineFormValues(false);
-    // by default, we want to apply the new buyer to the current invoice
-    setShouldApplyNewBuyerToInvoice(true);
+  // by default, we want to apply the new to to the current invoice
+    setShouldApplyNewToInvoice(true);
 
     onClose(false);
   }
 
-  function onSubmit(formValues: BuyerData) {
+  function onSubmit(formValues: ToData) {
     try {
       // **RUNNING SOME VALIDATIONS FIRST**
 
-      // Get existing buyers or initialize empty array
-      const buyers = localStorage.getItem(BUYERS_LOCAL_STORAGE_KEY);
-      const existingBuyers: unknown = buyers ? JSON.parse(buyers) : [];
+      // Get existing tos or initialize empty array
+      const tos = localStorage.getItem(TOS_LOCAL_STORAGE_KEY);
+      const existingTos: unknown = tos ? JSON.parse(tos) : [];
 
-      const rawBuyers = Array.isArray(existingBuyers) ? existingBuyers : [];
+      const rawTos = Array.isArray(existingTos) ? existingTos : [];
 
-      const validBuyers: BuyerData[] = [];
-      let hadInvalidBuyers = false;
+      const validTos: ToData[] = [];
+      let hadInvalidTos = false;
 
-      // Validate each buyer individually — drop only invalid items
-      for (const item of rawBuyers) {
-        const result = buyerSchema.safeParse(item);
+      // Validate each to individually — drop only invalid items
+      for (const item of rawTos) {
+        const result = toSchema.safeParse(item);
 
         if (result.success) {
-          validBuyers.push(result.data);
+          validTos.push(result.data);
         } else {
-          hadInvalidBuyers = true;
+          hadInvalidTos = true;
 
           console.error(
-            "[buyer-dialog] Dropped invalid buyer entry:",
+            "[to-dialog] Dropped invalid to entry:",
             result.error,
           );
 
           Sentry.captureException(
             new Error(
-              `[buyer-dialog] Invalid buyer data in localStorage: ${rawBuyers.length - validBuyers.length} items dropped`,
+              `[to-dialog] Invalid to data in localStorage: ${rawTos.length - validTos.length} items dropped`,
             ),
           );
         }
       }
 
-      // If we had invalid buyers, save the valid buyers back to localStorage
-      if (hadInvalidBuyers) {
+      // If we had invalid tos, save the valid tos back to localStorage
+      if (hadInvalidTos) {
         localStorage.setItem(
-          BUYERS_LOCAL_STORAGE_KEY,
-          JSON.stringify(validBuyers),
+          TOS_LOCAL_STORAGE_KEY,
+          JSON.stringify(validTos),
         );
       }
 
-      // Validate buyer data against existing buyers
-      const isDuplicateName = validBuyers.some(
-        (buyer: BuyerData) =>
-          buyer.name === formValues.name && buyer.id !== formValues.id,
+      // Validate to data against existing tos
+      const isDuplicateName = validTos.some(
+        (to: ToData) =>
+          to.name === formValues.name && to.id !== formValues.id,
       );
 
       if (isDuplicateName) {
         form.setError("name", {
           type: "manual",
-          message: "A buyer with this name already exists",
+          message: "A to with this name already exists",
         });
 
         // Focus on the name input field for user to fix the error
         form.setFocus("name");
 
         // Show error toast
-        toast.error("A buyer with this name already exists", {
+        toast.error("A to with this name already exists", {
           richColors: true,
         });
 
@@ -246,19 +246,19 @@ export function BuyerDialog({
       }
 
       if (isEditMode) {
-        // Edit buyer
-        handleBuyerEdit?.(formValues);
+        // Edit to
+        handleToEdit?.(formValues);
       } else {
-        // Add new buyer
-        handleBuyerAdd?.(formValues, { shouldApplyNewBuyerToInvoice });
+        // Add new to
+        handleToAdd?.(formValues, { shouldApplyNewToInvoice });
       }
 
       // Close dialog
       closeDialog();
     } catch (error) {
-      console.error("Failed to save buyer:", error);
+      console.error("Failed to save to:", error);
 
-      toast.error("Failed to save buyer", {
+      toast.error("Failed to save to", {
         description: "Please try again",
         richColors: true,
       });
@@ -287,16 +287,16 @@ export function BuyerDialog({
       >
         <DialogContent
           className="flex flex-col gap-0 overflow-y-visible p-0 sm:max-w-lg [&>button:last-child]:top-3.5"
-          data-testid={`manage-buyer-dialog`}
+          data-testid={`manage-to-dialog`}
         >
           <DialogHeader className="border-b border-slate-200 px-6 py-4 dark:border-slate-800">
             <DialogTitle className="text-base">
-              {isEditMode ? "Edit Buyer" : "Add New Buyer"}
+              {isEditMode ? "Edit To" : "Add New To"}
             </DialogTitle>
             <DialogDescription>
               {isEditMode
-                ? "Edit the buyer details"
-                : "Add a new buyer to use later in your invoices"}
+                ? "Edit the to details"
+                : "Add a new to to use later in your invoices"}
             </DialogDescription>
           </DialogHeader>
 
@@ -318,7 +318,7 @@ export function BuyerDialog({
                   </Label>
                 </div>
                 <span className="mt-1.5 inline-block text-xs text-slate-500">
-                  When enabled, this will automatically fill in the buyer
+                  When enabled, this will automatically fill in the to
                   details dialog with the information you&apos;ve already
                   entered in your current invoice form.
                 </span>
@@ -329,7 +329,7 @@ export function BuyerDialog({
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-4"
-                id={BUYER_FORM_ID}
+                id={TO_FORM_ID}
               >
                 <FormField
                   control={form.control}
@@ -341,7 +341,7 @@ export function BuyerDialog({
                         <Textarea
                           {...field}
                           rows={3}
-                          placeholder="Enter buyer name"
+                          placeholder="Enter to name"
                         />
                       </FormControl>
                       <FormMessage />
@@ -359,7 +359,7 @@ export function BuyerDialog({
                         <Textarea
                           {...field}
                           rows={3}
-                          placeholder="Enter buyer address"
+                          placeholder="Enter to address"
                         />
                       </FormControl>
                       <FormMessage />
@@ -370,7 +370,7 @@ export function BuyerDialog({
                 {/* Tax Number */}
                 <fieldset className="rounded-md border px-4 pb-4">
                   <legend className="text-base font-semibold lg:text-lg">
-                    Buyer Tax Number
+                    Tax Number
                   </legend>
 
                   <div className="mb-2 flex items-center justify-end">
@@ -466,7 +466,7 @@ export function BuyerDialog({
                           <Input
                             {...field}
                             type="email"
-                            placeholder="buyer@email.com"
+                            placeholder="to@email.com"
                           />
                         </FormControl>
                         <FormMessage />
@@ -484,14 +484,14 @@ export function BuyerDialog({
                               checked={field.value}
                               onCheckedChange={field.onChange}
                               id="emailFieldIsVisible"
-                              data-testid={`buyerEmailDialogFieldVisibilitySwitch`}
+                              data-testid={`toEmailDialogFieldVisibilitySwitch`}
                               aria-label={`Show the 'Email' field in the PDF`}
                             />
                           </FormControl>
                           <CustomTooltip
                             trigger={
                               <Label htmlFor="emailFieldIsVisible">
-                                Show Buyer Email in PDF
+                                Show To Email in PDF
                               </Label>
                             }
                             content='Show the "Email" field in the PDF'
@@ -536,14 +536,14 @@ export function BuyerDialog({
                               checked={field.value}
                               onCheckedChange={field.onChange}
                               id="notes-field-visibility"
-                              data-testid={`buyerNotesDialogFieldVisibilitySwitch`}
+                              data-testid={`toNotesDialogFieldVisibilitySwitch`}
                               aria-label={`Show the 'Notes' field in the PDF`}
                             />
                           </FormControl>
                           <CustomTooltip
                             trigger={
                               <Label htmlFor="notes-field-visibility">
-                                Show Buyer Notes in PDF
+                                Show To Notes in PDF
                               </Label>
                             }
                             content="Show the notes field in the PDF"
@@ -562,19 +562,19 @@ export function BuyerDialog({
               <div className="mt-4 flex flex-col gap-1 border-t pt-4">
                 <div className="flex items-center gap-2">
                   <Switch
-                    checked={shouldApplyNewBuyerToInvoice}
-                    onCheckedChange={setShouldApplyNewBuyerToInvoice}
-                    id="apply-buyer-to-current-invoice-switch"
+                    checked={shouldApplyNewToInvoice}
+                    onCheckedChange={setShouldApplyNewToInvoice}
+                    id="apply-to-to-current-invoice-switch"
                   />
                   <Label
-                    htmlFor="apply-buyer-to-current-invoice-switch"
+                    htmlFor="apply-to-to-current-invoice-switch"
                     className="cursor-pointer"
                   >
                     Apply to Current Invoice
                   </Label>
                 </div>
                 <span className="mt-1.5 text-xs text-slate-500">
-                  When enabled, the newly created buyer will be automatically
+                  When enabled, the newly created to will be automatically
                   applied to your current invoice form and reflected in the
                   generated PDF.
                 </span>
@@ -605,9 +605,9 @@ export function BuyerDialog({
                 // trigger validations and submit the form and handle errors
                 void form.handleSubmit(onSubmit)();
               }}
-              form={BUYER_FORM_ID}
+              form={TO_FORM_ID}
             >
-              Save Buyer
+              Save To
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -619,7 +619,7 @@ export function BuyerDialog({
           pendingDiscardAction?.();
           setPendingDiscardAction(null);
         }}
-        entityName="buyer"
+        entityName="to"
       />
     </>
   );

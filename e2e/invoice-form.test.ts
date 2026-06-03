@@ -1080,8 +1080,8 @@ test.describe("Invoice Generator Page", () => {
 
     expect(parsedState).toEqual({
       general: true,
-      seller: false,
-      buyer: true,
+      from: false,
+      to: true,
       invoiceItems: false,
     } as const satisfies AccordionState);
 
@@ -1159,8 +1159,8 @@ test.describe("Invoice Generator Page", () => {
     const updatedParsedState = JSON.parse(updatedStoredState) as AccordionState;
     expect(updatedParsedState).toEqual({
       general: false,
-      seller: true,
-      buyer: true,
+      from: true,
+      to: true,
       invoiceItems: false,
     } as const satisfies AccordionState);
   });

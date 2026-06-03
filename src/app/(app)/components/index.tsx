@@ -282,28 +282,6 @@ export function InvoiceClientPage({
               Terms of Service
             </Link>
           </div>
-          {/* Founders info section (Mobile version) */}
-          <div className="mt-5 flex w-full justify-center">
-            <div className="flex items-center gap-1.5 text-xs text-zinc-700 duration-500 animate-in fade-in slide-in-from-bottom-2">
-              <a href={"/founder"}>
-                <img
-                  src="https://ik.imagekit.io/fl2lbswwo/avatar.jpeg?updatedAt=1757456439459"
-                  alt="Vlad Sazonau"
-                  className="size-6 rounded-full"
-                  height="24"
-                  width="24"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </a>
-              <span>
-                Made by{" "}
-                <a href={"/founder"} className="underline hover:text-black">
-                  Vlad Sazonau
-                </a>
-              </span>
-            </div>
-          </div>
         </div>
       ) : (
         // Desktop View
@@ -317,28 +295,8 @@ export function InvoiceClientPage({
                 setInvoiceFormHasErrors={setInvoiceFormHasErrors}
               />
             </div>
-
-            {/* Founders info section (Desktop version) */}
-            <div className="mt-1 flex items-center gap-1.5 text-xs text-zinc-800 duration-500 animate-in fade-in slide-in-from-bottom-2">
-              <a href={"/founder"}>
-                <img
-                  src="https://ik.imagekit.io/fl2lbswwo/avatar.jpeg?updatedAt=1757456439459"
-                  alt="Vlad Sazonau"
-                  className="size-6 rounded-full"
-                  height="24"
-                  width="24"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </a>
-              <span>
-                Made by{" "}
-                <a href={"/founder"} className="underline hover:text-black">
-                  Vlad Sazonau
-                </a>
-              </span>
-            </div>
           </div>
+
           {/* Invoice preview section i.e. right column (Desktop version) */}
           <div className="relative col-span-8 h-[620px] w-full max-w-full 2xl:h-[700px]">
             {invoiceLastUpdatedAtFormatted && (

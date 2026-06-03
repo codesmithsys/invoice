@@ -1,4 +1,4 @@
-import { sellerSchema, type SellerData } from "@/app/schema";
+import { fromSchema, type FromData } from "@/app/schema";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -27,29 +27,29 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ConfirmDiscardDialog } from "../confirm-discard-dialog";
-import { SELLERS_LOCAL_STORAGE_KEY } from "./seller-management";
+import { FROMS_LOCAL_STORAGE_KEY } from "./seller-management";
 import { InputHelperMessage } from "../../../../../../../components/ui/input-helper-message";
 import { useConfirmDiscard } from "@/app/(app)/components/invoice-form/sections/hooks/use-confirm-discard";
 
-const SELLER_FORM_ID = "seller-form";
+const FROM_FORM_ID = "seller-form";
 
-interface SellerDialogProps {
+interface FromDialogProps {
   isOpen: boolean;
   onClose: React.Dispatch<React.SetStateAction<boolean>>;
   handleSellerAdd?: (
-    seller: SellerData,
+    seller: FromData,
     {
       shouldApplyNewSellerToInvoice,
     }: { shouldApplyNewSellerToInvoice: boolean },
   ) => void;
-  handleSellerEdit?: (seller: SellerData) => void;
-  initialData: SellerData | null;
+  handleSellerEdit?: (seller: FromData) => void;
+  initialData: FromData | null;
   isEditMode: boolean;
-  formValues?: Partial<SellerData>;
+  formValues?: Partial<FromData>;
 }
 
 /**
- * SellerDialog component for adding or editing seller information.
+ * FromDialog component for adding or editing seller information.
  *
  * This dialog provides a form interface for managing seller data, including:
  * - Basic information (name, address, VAT number)
@@ -64,7 +64,7 @@ interface SellerDialogProps {
  * - Unsaved changes warning on dialog close
  * - Field visibility toggles for optional information
  */
-export function SellerDialog({
+export function FromDialog({
   isOpen,
   onClose,
   handleSellerAdd,
@@ -72,9 +72,9 @@ export function SellerDialog({
   initialData,
   isEditMode,
   formValues,
-}: SellerDialogProps) {
-  const form = useForm<SellerData>({
-    resolver: zodResolver(sellerSchema),
+}: FromDialogProps) {
+  const form = useForm<FromData>({
+    resolver: zodResolver(fromSchema),
     defaultValues: {
       id: initialData?.id ?? "",
       name: initialData?.name ?? "",
@@ -181,22 +181,22 @@ export function SellerDialog({
     onClose(false);
   }
 
-  function onSubmit(formValues: SellerData) {
+  function onSubmit(formValues: FromData) {
     try {
       // **RUNNING SOME VALIDATIONS FIRST**
 
       // Get existing sellers or initialize empty array
-      const sellers = localStorage.getItem(SELLERS_LOCAL_STORAGE_KEY);
+      const sellers = localStorage.getItem(FROMS_LOCAL_STORAGE_KEY);
       const existingSellers: unknown = sellers ? JSON.parse(sellers) : [];
 
       const rawSellers = Array.isArray(existingSellers) ? existingSellers : [];
 
-      const validSellers: SellerData[] = [];
+      const validSellers: FromData[] = [];
       let hadInvalidSellers = false;
 
       // Validate each seller individually — drop only invalid items
       for (const item of rawSellers) {
-        const result = sellerSchema.safeParse(item);
+        const result = fromSchema.safeParse(item);
         if (result.success) {
           validSellers.push(result.data);
         } else {
@@ -218,7 +218,7 @@ export function SellerDialog({
       // If we had invalid sellers, save the valid sellers back to localStorage
       if (hadInvalidSellers) {
         localStorage.setItem(
-          SELLERS_LOCAL_STORAGE_KEY,
+          FROMS_LOCAL_STORAGE_KEY,
           JSON.stringify(validSellers),
         );
       }
@@ -227,7 +227,7 @@ export function SellerDialog({
 
       // Validate seller data against existing sellers
       const isDuplicateName = validSellers.some(
-        (seller: SellerData) =>
+        (seller: FromData) =>
           seller.name === formValues.name && seller.id !== formValues.id,
       );
 
@@ -293,11 +293,11 @@ export function SellerDialog({
       >
         <DialogContent
           className="flex flex-col gap-0 overflow-y-visible p-0 sm:max-w-lg [&>button:last-child]:top-3.5"
-          data-testid={`manage-seller-dialog`}
+          data-testid={`manage-from-dialog`}
         >
           <DialogHeader className="border-b border-slate-200 px-6 py-4 dark:border-slate-800">
             <DialogTitle className="text-base">
-              {isEditMode ? "Edit Seller" : "Add New Seller"}
+              {isEditMode ? "Edit From" : "Add New From"}
             </DialogTitle>
             <DialogDescription>
               {isEditMode
@@ -335,7 +335,7 @@ export function SellerDialog({
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-4"
-                id={SELLER_FORM_ID}
+                id={FROM_FORM_ID}
               >
                 <FormField
                   control={form.control}
@@ -347,7 +347,7 @@ export function SellerDialog({
                         <Textarea
                           {...field}
                           rows={3}
-                          placeholder="Enter seller name"
+                          placeholder="Enter from name"
                         />
                       </FormControl>
                       <FormMessage />
@@ -365,7 +365,7 @@ export function SellerDialog({
                         <Textarea
                           {...field}
                           rows={3}
-                          placeholder="Enter seller address"
+                          placeholder="Enter from address"
                         />
                       </FormControl>
                       <FormMessage />
@@ -375,7 +375,7 @@ export function SellerDialog({
 
                 <fieldset className="rounded-md border px-4 pb-4">
                   <legend className="text-base font-semibold lg:text-lg">
-                    Seller Tax Number
+                    Tax Number
                   </legend>
 
                   <div className="mb-2 flex items-center justify-end">
@@ -488,14 +488,14 @@ export function SellerDialog({
                               checked={field.value}
                               onCheckedChange={field.onChange}
                               id="emailFieldIsVisible"
-                              data-testid={`sellerEmailDialogFieldVisibilitySwitch`}
+                              data-testid={`fromEmailDialogFieldVisibilitySwitch`}
                               aria-label={`Show the 'Email' field in the PDF`}
                             />
                           </FormControl>
                           <CustomTooltip
                             trigger={
                               <Label htmlFor="emailFieldIsVisible">
-                                Show Seller Email in PDF
+                                Show From Email in PDF
                               </Label>
                             }
                             content='Show the "Email" field in the PDF'
@@ -543,7 +543,7 @@ export function SellerDialog({
                           <CustomTooltip
                             trigger={
                               <Label htmlFor="accountNumberFieldIsVisible">
-                                Show Seller Account Number in PDF
+                                Show From Account Number in PDF
                               </Label>
                             }
                             content='Show the "Account Number" field in the PDF'
@@ -591,7 +591,7 @@ export function SellerDialog({
                           <CustomTooltip
                             trigger={
                               <Label htmlFor="swiftBicFieldIsVisible">
-                                Show Seller SWIFT/BIC in PDF
+                                Show From SWIFT/BIC in PDF
                               </Label>
                             }
                             content='Show the "SWIFT/BIC" field in the PDF'
@@ -636,14 +636,14 @@ export function SellerDialog({
                               checked={field.value}
                               onCheckedChange={field.onChange}
                               id="notes-field-visibility"
-                              data-testid={`sellerNotesDialogFieldVisibilitySwitch`}
+                              data-testid={`fromNotesDialogFieldVisibilitySwitch`}
                               aria-label={`Show the 'Notes' field in the PDF`}
                             />
                           </FormControl>
                           <CustomTooltip
                             trigger={
                               <Label htmlFor="notes-field-visibility">
-                                Show Seller Notes in PDF
+                                Show From Notes in PDF
                               </Label>
                             }
                             content="Show the notes field in the PDF"
@@ -706,9 +706,9 @@ export function SellerDialog({
                 // trigger validations and submit the form
                 void form.handleSubmit(onSubmit)();
               }}
-              form={SELLER_FORM_ID}
+              form={FROM_FORM_ID}
             >
-              Save Seller
+              Save From
             </Button>
           </DialogFooter>
         </DialogContent>

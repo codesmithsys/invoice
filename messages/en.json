@@ -96,7 +96,7 @@
       },
       "customization": {
         "question": "Can I customize the PDF invoice template and fields?",
-        "answer": "Yes. You can set seller and buyer details, line items, currency, tax labels and amounts, language for dates and labels, and layout options that change how the PDF looks. New template controls are added over time."
+        "answer": "Yes. You can set From and To details, line items, currency, tax labels and amounts, language for dates and labels, and layout options that change how the PDF looks. New template controls are added over time."
       },
       "dataSecurity": {
         "question": "Is my invoice data secure and private?",

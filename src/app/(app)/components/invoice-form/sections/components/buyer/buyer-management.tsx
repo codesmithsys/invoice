@@ -3,7 +3,7 @@ import { useId, useState, useEffect } from "react";
 import { CustomTooltip } from "@/components/ui/tooltip";
 import { SelectNative } from "@/components/ui/select-native";
 import { Button } from "@/components/ui/button";
-import { BuyerDialog } from "./buyer-dialog";
+import { ToDialog } from "./buyer-dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,90 +15,90 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import type { UseFormSetValue } from "react-hook-form";
-import { buyerSchema, type InvoiceData, type BuyerData } from "@/app/schema";
+import { toSchema, type InvoiceData, type ToData } from "@/app/schema";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { isLocalStorageAvailable } from "@/lib/check-local-storage";
 import { umamiTrackEvent } from "@/lib/umami-analytics-track-event";
 import * as Sentry from "@sentry/nextjs";
-import { DEFAULT_BUYER_DATA } from "@/app/constants";
+import { DEFAULT_TO_DATA } from "@/app/constants";
 
-export const BUYERS_LOCAL_STORAGE_KEY = "EASY_INVOICE_PDF_BUYERS";
+export const TOS_LOCAL_STORAGE_KEY = "EASY_INVOICE_PDF_BUYERS";
 
-interface BuyerManagementProps {
+interface ToManagementProps {
   setValue: UseFormSetValue<InvoiceData>;
   invoiceData: InvoiceData;
-  selectedBuyerId: string;
-  setSelectedBuyerId: (id: string) => void;
-  formValues?: Partial<BuyerData>;
+  selectedToId: string;
+  setSelectedToId: (id: string) => void;
+  formValues?: Partial<ToData>;
   isMobile: boolean;
 }
 
 /**
- * BuyerManagement Component
+ * ToManagement Component
  *
- * Manages buyer data for invoices including:
- * - Loading and displaying saved buyers from localStorage
- * - Creating new buyers via a dialog form
- * - Editing existing buyer details
- * - Deleting buyers with confirmation
- * - Auto-populating invoice form fields when a buyer is selected
+ * Manages to data for invoices including:
+ * - Loading and displaying saved tos from localStorage
+ * - Creating new tos via a dialog form
+ * - Editing existing to details
+ * - Deleting tos with confirmation
+ * - Auto-populating invoice form fields when a to is selected
  *
- * When a buyer is selected from the dropdown, their details are populated into the
- * invoice form and the form fields become read-only. Users must use the Edit Buyer
- * button to modify saved buyer information.
+ * When a to is selected from the dropdown, their details are populated into the
+ * invoice form and the form fields become read-only. Users must use the Edit To
+ * button to modify saved to information.
  *
  * @param setValue - React Hook Form setter to update invoice form values
- * @param invoiceData - Current invoice data including buyer information
- * @param selectedBuyerId - ID of the currently selected buyer
- * @param setSelectedBuyerId - Callback to update the selected buyer ID
- * @param formValues - Current buyer form values (optional)
+ * @param invoiceData - Current invoice data including to information
+ * @param selectedToId - ID of the currently selected to
+ * @param setSelectedToId - Callback to update the selected to ID
+ * @param formValues - Current to form values (optional)
  */
-export function BuyerManagement({
+export function ToManagement({
   setValue,
   invoiceData,
-  selectedBuyerId,
-  setSelectedBuyerId,
+  selectedToId,
+  setSelectedToId,
   formValues,
   isMobile,
-}: BuyerManagementProps) {
-  const [isBuyerDialogOpen, setIsBuyerDialogOpen] = useState(false);
+}: ToManagementProps) {
+  const [isToDialogOpen, setIsToDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   // State to store the list of saved buyers for the dropdown selection.
-  const [buyersSelectOptions, setBuyersSelectOptions] = useState<BuyerData[]>(
+  const [tosSelectOptions, setTosSelectOptions] = useState<ToData[]>(
     [],
   );
 
-  // State to track the buyer currently being edited (null if not editing).
-  const [editingBuyer, setEditingBuyer] = useState<BuyerData | null>(null);
+  // State to track the to currently being edited (null if not editing).
+  const [editingTo, setEditingTo] = useState<ToData | null>(null);
 
-  const buyerSelectId = useId();
+  const toSelectId = useId();
 
-  const isEditMode = Boolean(editingBuyer);
+  const isEditMode = Boolean(editingTo);
 
   // Load buyers from localStorage on component mount
   useEffect(() => {
     try {
-      const savedBuyers = localStorage.getItem(BUYERS_LOCAL_STORAGE_KEY);
+      const savedBuyers = localStorage.getItem(TOS_LOCAL_STORAGE_KEY);
       const parsedBuyers: unknown = savedBuyers ? JSON.parse(savedBuyers) : [];
 
       const rawBuyers = Array.isArray(parsedBuyers) ? parsedBuyers : [];
 
-      const validBuyers: BuyerData[] = [];
-      const invalidBuyers: BuyerData[] = [];
+      const validBuyers: ToData[] = [];
+      const invalidBuyers: ToData[] = [];
 
-      // Validate each buyer individually — drop only invalid items
+      // Validate each to individually — drop only invalid items
       for (const item of rawBuyers) {
-        const result = buyerSchema.safeParse(item);
+        const result = toSchema.safeParse(item);
         if (result.success) {
           validBuyers.push(result.data);
         } else {
-          invalidBuyers.push(item as BuyerData);
+          invalidBuyers.push(item as ToData);
 
           console.error(
-            "[buyer-management] Invalid buyer entry:",
+            "[to-management] Invalid to entry:",
             result.error,
           );
         }
@@ -107,65 +107,65 @@ export function BuyerManagement({
       // If we have invalid buyers, drop them and save the valid buyers back to localStorage
       if (invalidBuyers.length > 0) {
         console.error(
-          `[buyer-management] Dropped ${invalidBuyers.length} invalid buyer entries:`,
+          `[to-management] Dropped ${invalidBuyers.length} invalid to entries:`,
           invalidBuyers,
         );
 
         Sentry.captureException(
           new Error(
-            `[buyer-management] Invalid buyer data in localStorage: ${rawBuyers.length - validBuyers.length} items dropped`,
+            `[to-management] Invalid to data in localStorage: ${rawBuyers.length - validBuyers.length} items dropped`,
           ),
         );
 
         localStorage.setItem(
-          BUYERS_LOCAL_STORAGE_KEY,
+          TOS_LOCAL_STORAGE_KEY,
           JSON.stringify(validBuyers),
         );
       }
 
-      const selectedBuyer = validBuyers.find((buyer: BuyerData) => {
-        return buyer?.id === invoiceData?.buyer?.id;
+      const selectedTo = validBuyers.find((to: ToData) => {
+        return to?.id === invoiceData?.buyer?.id;
       });
 
-      setBuyersSelectOptions(validBuyers);
-      setSelectedBuyerId(selectedBuyer?.id ?? "");
+      setTosSelectOptions(validBuyers);
+      setSelectedToId(selectedTo?.id ?? "");
     } catch (error) {
       console.error("Failed to load buyers:", error);
 
       Sentry.captureException(error);
     }
-  }, [invoiceData?.buyer?.id, setSelectedBuyerId]);
+  }, [invoiceData?.buyer?.id, setSelectedToId]);
 
   // Update buyers when a new one is added
-  const handleBuyerAdd = (
-    newBuyer: BuyerData,
-    { shouldApplyNewBuyerToInvoice }: { shouldApplyNewBuyerToInvoice: boolean },
+  const handleToAdd = (
+    newTo: ToData,
+    { shouldApplyNewToInvoice }: { shouldApplyNewToInvoice: boolean },
   ) => {
     try {
-      const newBuyerWithId = {
-        ...newBuyer,
-        // Generate a unique ID for the new buyer (IMPORTANT!) =)
+      const newToWithId = {
+        ...newTo,
+        // Generate a unique ID for the new to (IMPORTANT!) =)
         id: Date.now().toString(),
-      } satisfies BuyerData;
+      } satisfies ToData;
 
-      const newBuyers = [...buyersSelectOptions, newBuyerWithId];
+      const newBuyers = [...tosSelectOptions, newToWithId];
 
       // Save to localStorage
-      localStorage.setItem(BUYERS_LOCAL_STORAGE_KEY, JSON.stringify(newBuyers));
+      localStorage.setItem(TOS_LOCAL_STORAGE_KEY, JSON.stringify(newBuyers));
 
       // Update the buyers state
-      setBuyersSelectOptions(newBuyers);
+      setTosSelectOptions(newBuyers);
 
-      // Apply the new buyer to the invoice if the user wants to, otherwise just add it to the list and use it later if needed
-      if (shouldApplyNewBuyerToInvoice) {
-        setValue("buyer", newBuyerWithId);
-        setSelectedBuyerId(newBuyerWithId?.id);
+      // Apply the new to to the invoice if the user wants to, otherwise just add it to the list and use it later if needed
+      if (shouldApplyNewToInvoice) {
+        setValue("buyer", newToWithId);
+        setSelectedToId(newToWithId?.id);
       }
 
       toast.success(
-        shouldApplyNewBuyerToInvoice
-          ? "Buyer added and applied to invoice"
-          : "Buyer added successfully",
+        shouldApplyNewToInvoice
+          ? "To added and applied to invoice"
+          : "To added successfully",
         {
           id: "add_buyer_success_toast",
           richColors: true,
@@ -176,9 +176,9 @@ export function BuyerManagement({
       // analytics track event
       umamiTrackEvent("add_buyer_success");
     } catch (error) {
-      console.error("Failed to add buyer:", error);
+      console.error("Failed to add to:", error);
 
-      toast.error("Failed to add buyer", {
+      toast.error("Failed to add to", {
         id: "add_buyer_error_toast",
         description: "Please try again",
         closeButton: true,
@@ -190,24 +190,24 @@ export function BuyerManagement({
   };
 
   // Update buyers when edited
-  const handleBuyerEdit = (editedBuyer: BuyerData) => {
+  const handleToEdit = (editedTo: ToData) => {
     try {
-      const updatedBuyers = buyersSelectOptions.map((buyer) =>
-        buyer.id === editedBuyer.id ? editedBuyer : buyer,
+      const updatedBuyers = tosSelectOptions.map((to) =>
+        to.id === editedTo.id ? editedTo : to,
       );
 
       localStorage.setItem(
-        BUYERS_LOCAL_STORAGE_KEY,
+        TOS_LOCAL_STORAGE_KEY,
         JSON.stringify(updatedBuyers),
       );
 
-      setBuyersSelectOptions(updatedBuyers);
-      setValue("buyer", editedBuyer);
+      setTosSelectOptions(updatedBuyers);
+      setValue("buyer", editedTo);
 
       // end edit mode
-      setEditingBuyer(null);
+      setEditingTo(null);
 
-      toast.success("Buyer updated successfully", {
+      toast.success("To updated successfully", {
         id: "edit_buyer_success_toast",
         richColors: true,
         position: isMobile ? "top-center" : "bottom-right",
@@ -216,9 +216,9 @@ export function BuyerManagement({
       // analytics track event
       umamiTrackEvent("edit_buyer_success");
     } catch (error) {
-      console.error("Failed to edit buyer:", error);
+      console.error("Failed to edit to:", error);
 
-      toast.error("Failed to edit buyer", {
+      toast.error("Failed to edit to", {
         id: "edit_buyer_error_toast",
         description: "Please try again",
         closeButton: true,
@@ -229,29 +229,29 @@ export function BuyerManagement({
     }
   };
 
-  const handleBuyerChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleToChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const id = event.target.value;
 
     if (id) {
-      setSelectedBuyerId(id);
-      const selectedBuyer = buyersSelectOptions.find(
-        (buyer) => buyer.id === id,
+      setSelectedToId(id);
+      const selectedTo = tosSelectOptions.find(
+        (to) => to.id === id,
       );
 
-      if (selectedBuyer) {
-        setValue("buyer", selectedBuyer);
-        toast.success(`Buyer "${selectedBuyer.name}" applied to invoice`, {
+      if (selectedTo) {
+        setValue("buyer", selectedTo);
+        toast.success(`To "${selectedTo.name}" applied to invoice`, {
           id: "change_buyer_success_toast",
           richColors: true,
           position: isMobile ? "top-center" : "bottom-right",
         });
       }
     } else {
-      // Clear the buyer from the form if the user selects the empty option
-      setSelectedBuyerId("");
-      setValue("buyer", DEFAULT_BUYER_DATA);
+      // Clear the to from the form if the user selects the empty option
+      setSelectedToId("");
+      setValue("buyer", DEFAULT_TO_DATA);
 
-      toast.success("Buyer restored to default", {
+      toast.success("To restored to default", {
         id: "reset_buyer_success_toast",
         richColors: true,
         position: isMobile ? "top-center" : "bottom-right",
@@ -262,28 +262,28 @@ export function BuyerManagement({
     umamiTrackEvent("change_buyer");
   };
 
-  const handleDeleteBuyer = () => {
+  const handleDeleteTo = () => {
     try {
-      setBuyersSelectOptions((prevBuyers) => {
+      setTosSelectOptions((prevBuyers) => {
         const updatedBuyers = prevBuyers.filter(
-          (buyer) => buyer.id !== selectedBuyerId,
+          (to) => to.id !== selectedToId,
         );
 
         localStorage.setItem(
-          BUYERS_LOCAL_STORAGE_KEY,
+          TOS_LOCAL_STORAGE_KEY,
           JSON.stringify(updatedBuyers),
         );
         return updatedBuyers;
       });
-      // Clear the selected buyer index
-      setSelectedBuyerId("");
-      // Clear the buyer from the form if it was selected
-      setValue("buyer", DEFAULT_BUYER_DATA);
+      // Clear the selected to index
+      setSelectedToId("");
+      // Clear the to from the form if it was selected
+      setValue("buyer", DEFAULT_TO_DATA);
 
       // Close the delete dialog
       setIsDeleteDialogOpen(false);
 
-      toast.success("Buyer deleted successfully", {
+      toast.success("To deleted successfully", {
         id: "delete_buyer_success_toast",
         richColors: true,
         position: isMobile ? "top-center" : "bottom-right",
@@ -292,9 +292,9 @@ export function BuyerManagement({
       // analytics track event
       umamiTrackEvent("delete_buyer_success");
     } catch (error) {
-      console.error("Failed to delete buyer:", error);
+      console.error("Failed to delete to:", error);
 
-      toast.error("Failed to delete buyer", {
+      toast.error("Failed to delete to", {
         id: "delete_buyer_error_toast",
         description: "Please try again",
         closeButton: true,
@@ -305,49 +305,49 @@ export function BuyerManagement({
     }
   };
 
-  const activeBuyer = buyersSelectOptions.find(
-    (buyer) => buyer.id === selectedBuyerId,
+  const activeTo = tosSelectOptions.find(
+    (to) => to.id === selectedToId,
   );
 
-  const hasBuyers = buyersSelectOptions.length > 0;
+  const hasTos = tosSelectOptions.length > 0;
 
   return (
     <>
       <div
         className={cn(
           "flex w-full flex-col gap-2",
-          hasBuyers
+          hasTos
             ? "rounded-md border p-4 shadow shadow-slate-400/10"
             : "mt-3",
         )}
       >
-        {hasBuyers ? (
+        {hasTos ? (
           <div className="w-full space-y-1">
             <div className="flex items-center gap-1">
-              <Label htmlFor={buyerSelectId} className="">
-                Select Buyer
+              <Label htmlFor={toSelectId} className="">
+                Select To
               </Label>
             </div>
             <div className="flex w-full gap-2">
               <SelectNative
-                id={buyerSelectId}
+                id={toSelectId}
                 className={cn(
                   "block h-8 w-full text-[12px]",
-                  !selectedBuyerId && "italic text-gray-700",
+                  !selectedToId && "italic text-gray-700",
                 )}
-                onChange={handleBuyerChange}
-                value={selectedBuyerId}
-                title={activeBuyer?.name}
+                onChange={handleToChange}
+                value={selectedToId}
+                title={activeTo?.name}
               >
-                <option value="">No buyer selected (default)</option>
-                {buyersSelectOptions.map((buyer) => (
-                  <option key={buyer.id} value={buyer.id}>
-                    {buyer.name}
+                <option value="">No to selected (default)</option>
+                {tosSelectOptions.map((to) => (
+                  <option key={to.id} value={to.id}>
+                    {to.name}
                   </option>
                 ))}
               </SelectNative>
 
-              {selectedBuyerId ? (
+              {selectedToId ? (
                 <div className="flex items-center gap-2">
                   <CustomTooltip
                     trigger={
@@ -355,21 +355,21 @@ export function BuyerManagement({
                         variant="outline"
                         size="sm"
                         onClick={() => {
-                          if (activeBuyer) {
+                          if (activeTo) {
                             // dismiss any existing toast for better UX
                             toast.dismiss();
 
-                            setEditingBuyer(activeBuyer);
-                            setIsBuyerDialogOpen(true);
+                            setEditingTo(activeTo);
+                            setIsToDialogOpen(true);
                           }
                         }}
                         className="size-8 px-2"
                       >
-                        <span className="sr-only">Edit buyer</span>
+                        <span className="sr-only">Edit to</span>
                         <Pencil className="size-3.5" />
                       </Button>
                     }
-                    content="Edit buyer"
+                    content="Edit to"
                   />
                   <CustomTooltip
                     trigger={
@@ -384,11 +384,11 @@ export function BuyerManagement({
                         }}
                         className="size-8 px-2"
                       >
-                        <span className="sr-only">Delete buyer</span>
+                        <span className="sr-only">Delete to</span>
                         <Trash2 className="size-3.5" />
                       </Button>
                     }
-                    content="Delete buyer"
+                    content="Delete to"
                   />
                 </div>
               ) : null}
@@ -408,11 +408,11 @@ export function BuyerManagement({
                   // dismiss any existing toast for better UX
                   toast.dismiss();
 
-                  // open buyer dialog
-                  setIsBuyerDialogOpen(true);
+                  // open to dialog
+                  setIsToDialogOpen(true);
                 } else {
-                  toast.error("Unable to add buyer", {
-                    id: "unable-to-add-buyer-error-toast",
+                  toast.error("Unable to add to", {
+                    id: "unable-to-add-to-error-toast",
                     description: (
                       <>
                         <p className="text-pretty text-xs leading-relaxed text-red-700">
@@ -427,7 +427,7 @@ export function BuyerManagement({
               }}
               aria-disabled={!isLocalStorageAvailable} // better UX than 'disabled'
             >
-              New Buyer
+              New To
               <Plus className="ml-1 size-3" />
             </Button>
           }
@@ -436,10 +436,10 @@ export function BuyerManagement({
               <div className="flex items-center gap-3 p-2">
                 <div className="space-y-1">
                   <p className="text-sm font-semibold text-slate-900">
-                    Save Buyers for Quick Access
+                    Save Tos for Quick Access
                   </p>
                   <p className="text-pretty text-xs leading-relaxed text-slate-700">
-                    Store multiple buyers to easily reuse their information in
+                    Store multiple tos to easily reuse their information in
                     future invoices. All data is saved locally in your browser.
                   </p>
                 </div>
@@ -453,7 +453,7 @@ export function BuyerManagement({
                   </p>
                   <p className="text-pretty text-xs leading-relaxed text-red-700">
                     Local storage is not available in your browser. Please
-                    enable it or try another browser to save buyer information.
+                    enable it or try another browser to save to information.
                   </p>
                 </div>
               </div>
@@ -462,39 +462,39 @@ export function BuyerManagement({
         />
       </div>
 
-      <BuyerDialog
-        // we need to rerender the dialog when the editingBuyer changes
-        key={editingBuyer?.id}
-        isOpen={isBuyerDialogOpen}
+      <ToDialog
+        // we need to rerender the dialog when the editingTo changes
+        key={editingTo?.id}
+        isOpen={isToDialogOpen}
         onClose={() => {
-          setIsBuyerDialogOpen(false);
-          setEditingBuyer(null);
+          setIsToDialogOpen(false);
+          setEditingTo(null);
         }}
-        handleBuyerAdd={handleBuyerAdd}
-        handleBuyerEdit={handleBuyerEdit}
-        initialData={editingBuyer}
+        handleToAdd={handleToAdd}
+        handleToEdit={handleToEdit}
+        initialData={editingTo}
         isEditMode={isEditMode}
         formValues={formValues}
       />
 
-      {/* Delete alert buyer dialog */}
+      {/* Delete alert to dialog */}
       <AlertDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Buyer</AlertDialogTitle>
+            <AlertDialogTitle>Delete To</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete{" "}
-              <span className="font-bold">&quot;{activeBuyer?.name}&quot;</span>{" "}
-              buyer? This action cannot be undone.
+              <span className="font-bold">&quot;{activeTo?.name}&quot;</span>{" "}
+              to? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleDeleteBuyer}
+              onClick={handleDeleteTo}
               className="bg-red-500 text-red-50 hover:bg-red-500/90"
             >
               Delete

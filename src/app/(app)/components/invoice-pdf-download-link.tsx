@@ -20,8 +20,6 @@ import { CustomTooltip } from "@/components/ui/tooltip";
 import { useDeviceContext } from "@/contexts/device-context";
 import { isTelegramInAppBrowser } from "@/utils/is-telegram-in-app-browser";
 import { updateAppMetadata } from "../utils/get-app-metadata";
-import { useCTAToast } from "../contexts/cta-toast-context";
-import { CTA_TOAST_TIMEOUT, showRandomCTAToast } from "./cta-toasts";
 import { haptic } from "@/lib/haptic";
 
 // Separate button states into a memoized component
@@ -60,7 +58,6 @@ export function InvoicePDFDownloadLink({
   isMobile: boolean;
 }) {
   const { inAppInfo } = useDeviceContext();
-  const { markCTAActionTriggered } = useCTAToast();
 
   const [{ loading: pdfLoading, url, error }, updatePdfInstance] = usePDF();
   const [isLoading, setIsLoading] = useState(false);
@@ -130,12 +127,6 @@ export function InvoicePDFDownloadLink({
 
         // close all other toasts (if any)
         toast.dismiss();
-
-        markCTAActionTriggered();
-
-        setTimeout(() => {
-          showRandomCTAToast();
-        }, CTA_TOAST_TIMEOUT);
       }
     },
     [
@@ -147,7 +138,6 @@ export function InvoicePDFDownloadLink({
       error,
       isMobile,
       invoiceData.template,
-      markCTAActionTriggered,
     ],
   );
 

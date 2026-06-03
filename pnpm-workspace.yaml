@@ -1,0 +1,8 @@
+allowBuilds:
+  '@sentry/cli': true
+  '@vercel/speed-insights': true
+  canvas: true
+  esbuild: true
+  msw: true
+  sharp: true
+  unrs-resolver: true

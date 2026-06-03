@@ -1,5 +1,5 @@
-import { DEFAULT_BUYER_DATA } from "@/app/constants";
-import { type BuyerData } from "@/app/schema";
+import { DEFAULT_TO_DATA } from "@/app/constants";
+import { type ToData } from "@/app/schema";
 import { expect, test } from "@playwright/test";
 
 test.describe("Buyer management", () => {
@@ -26,7 +26,7 @@ test.describe("Buyer management", () => {
 
       notesFieldIsVisible: true,
       notes: "This is a test note",
-    } as const satisfies BuyerData;
+    } as const satisfies ToData;
 
     /*
      * TEST BUYER MANAGEMENT DIALOG FORM
@@ -134,7 +134,7 @@ test.describe("Buyer management", () => {
     })) as string;
     expect(storedData).toBeTruthy();
 
-    const parsedData = JSON.parse(storedData) as BuyerData[];
+    const parsedData = JSON.parse(storedData) as ToData[];
 
     expect(parsedData[0]).toMatchObject({
       name: TEST_BUYER_DATA.name,
@@ -149,7 +149,7 @@ test.describe("Buyer management", () => {
 
       notes: TEST_BUYER_DATA.notes,
       notesFieldIsVisible: true,
-    } satisfies BuyerData);
+    } satisfies ToData);
 
     /*
      * TEST SAVED DETAILS IN INVOICE FORM AFTER SAVING BUYER
@@ -345,7 +345,7 @@ test.describe("Buyer management", () => {
 
       notesFieldIsVisible: true,
       notes: "",
-    } as const satisfies BuyerData;
+    } as const satisfies ToData;
 
     const manageBuyerDialog = page.getByTestId(`manage-buyer-dialog`);
 
@@ -394,13 +394,13 @@ test.describe("Buyer management", () => {
 
     // Form fields should still contain default values (buyer was not applied)
     await expect(buyerForm.getByRole("textbox", { name: "Name" })).toHaveValue(
-      DEFAULT_BUYER_DATA.name,
+      DEFAULT_TO_DATA.name,
     );
     await expect(
       buyerForm.getByRole("textbox", { name: "Address" }),
-    ).toHaveValue(DEFAULT_BUYER_DATA.address);
+    ).toHaveValue(DEFAULT_TO_DATA.address);
     await expect(buyerForm.getByRole("textbox", { name: "Email" })).toHaveValue(
-      DEFAULT_BUYER_DATA.email,
+      DEFAULT_TO_DATA.email,
     );
   });
 
@@ -420,7 +420,7 @@ test.describe("Buyer management", () => {
 
       notesFieldIsVisible: true,
       notes: "",
-    } as const satisfies BuyerData;
+    } as const satisfies ToData;
 
     const manageBuyerDialog = page.getByTestId(`manage-buyer-dialog`);
 
@@ -471,13 +471,13 @@ test.describe("Buyer management", () => {
 
     // Verify form reset to default values
     await expect(buyerForm.getByRole("textbox", { name: "Name" })).toHaveValue(
-      DEFAULT_BUYER_DATA.name,
+      DEFAULT_TO_DATA.name,
     );
     await expect(
       buyerForm.getByRole("textbox", { name: "Address" }),
-    ).toHaveValue(DEFAULT_BUYER_DATA.address);
+    ).toHaveValue(DEFAULT_TO_DATA.address);
     await expect(buyerForm.getByRole("textbox", { name: "Email" })).toHaveValue(
-      DEFAULT_BUYER_DATA.email,
+      DEFAULT_TO_DATA.email,
     );
 
     // Reselect the saved buyer from the dropdown
@@ -526,7 +526,7 @@ test.describe("Buyer management", () => {
 
       notesFieldIsVisible: true,
       notes: "This is a test note",
-    } as const satisfies BuyerData;
+    } as const satisfies ToData;
 
     const manageBuyerDialog = page.getByTestId(`manage-buyer-dialog`);
 
@@ -603,22 +603,22 @@ test.describe("Buyer management", () => {
 
     // Verify form is reset to default values
     await expect(buyerForm.getByRole("textbox", { name: "Name" })).toHaveValue(
-      DEFAULT_BUYER_DATA.name,
+      DEFAULT_TO_DATA.name,
     );
 
     await expect(
       buyerForm.getByRole("textbox", { name: "Address" }),
-    ).toHaveValue(DEFAULT_BUYER_DATA.address);
+    ).toHaveValue(DEFAULT_TO_DATA.address);
 
     await expect(buyerForm.getByRole("textbox", { name: "Email" })).toHaveValue(
-      DEFAULT_BUYER_DATA.email,
+      DEFAULT_TO_DATA.email,
     );
 
     await expect(
       buyerForm
         .getByRole("group", { name: "Buyer Tax Number" })
         .getByRole("textbox", { name: "Value" }),
-    ).toHaveValue(DEFAULT_BUYER_DATA.vatNo);
+    ).toHaveValue(DEFAULT_TO_DATA.vatNo);
   });
 
   test("switches reset to defaults after dialog close and reopen", async ({
@@ -863,7 +863,7 @@ test.describe("Buyer management", () => {
 
       // Draft text is gone — form was reset with pre-fill values
       await expect(nameInput).not.toHaveValue("Draft Buyer");
-      await expect(nameInput).toHaveValue(DEFAULT_BUYER_DATA.name);
+      await expect(nameInput).toHaveValue(DEFAULT_TO_DATA.name);
     });
 
     test("toggling switch ON with dirty form - Keep editing preserves draft and switch stays OFF", async ({
@@ -1038,7 +1038,7 @@ test.describe("Buyer management", () => {
     const storedData = (await page.evaluate(() =>
       localStorage.getItem("EASY_INVOICE_PDF_BUYERS"),
     )) as string;
-    const parsedData = JSON.parse(storedData) as BuyerData[];
+    const parsedData = JSON.parse(storedData) as ToData[];
 
     expect(parsedData).toHaveLength(1);
     expect(parsedData[0].name).toBe("Globex Corp");
@@ -1096,7 +1096,7 @@ test.describe("Buyer management", () => {
     const storedData = (await page.evaluate(() =>
       localStorage.getItem("EASY_INVOICE_PDF_BUYERS"),
     )) as string;
-    const parsedData = JSON.parse(storedData) as BuyerData[];
+    const parsedData = JSON.parse(storedData) as ToData[];
 
     expect(parsedData).toHaveLength(1);
     expect(parsedData[0].name).toBe("Globex Corp");

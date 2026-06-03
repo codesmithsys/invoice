@@ -1,5 +1,5 @@
-import { DEFAULT_SELLER_DATA } from "@/app/constants";
-import { type SellerData } from "@/app/schema";
+import { DEFAULT_FROM_DATA } from "@/app/constants";
+import { type FromData } from "@/app/schema";
 import { expect, test } from "@playwright/test";
 
 test.describe("Seller management", () => {
@@ -33,7 +33,7 @@ test.describe("Seller management", () => {
 
       notesFieldIsVisible: true,
       notes: "This is a SELLER test note",
-    } as const satisfies SellerData;
+    } as const satisfies FromData;
 
     const manageSellerDialog = page.getByTestId(`manage-seller-dialog`);
 
@@ -161,7 +161,7 @@ test.describe("Seller management", () => {
     })) as string;
     expect(storedData).toBeTruthy();
 
-    const parsedData = JSON.parse(storedData) as SellerData[];
+    const parsedData = JSON.parse(storedData) as FromData[];
 
     expect(parsedData[0]).toMatchObject({
       name: TEST_SELLER_DATA.name,
@@ -182,7 +182,7 @@ test.describe("Seller management", () => {
 
       notes: TEST_SELLER_DATA.notes,
       notesFieldIsVisible: true,
-    } satisfies SellerData);
+    } satisfies FromData);
 
     // Verify success toast message is visible
     await expect(
@@ -372,7 +372,7 @@ test.describe("Seller management", () => {
 
       notesFieldIsVisible: true,
       notes: "",
-    } as const satisfies SellerData;
+    } as const satisfies FromData;
 
     const manageSellerDialog = page.getByTestId(`manage-seller-dialog`);
 
@@ -420,14 +420,14 @@ test.describe("Seller management", () => {
 
     // Form fields should still contain default values (seller was not applied)
     await expect(sellerForm.getByRole("textbox", { name: "Name" })).toHaveValue(
-      DEFAULT_SELLER_DATA.name,
+      DEFAULT_FROM_DATA.name,
     );
     await expect(
       sellerForm.getByRole("textbox", { name: "Address" }),
-    ).toHaveValue(DEFAULT_SELLER_DATA.address);
+    ).toHaveValue(DEFAULT_FROM_DATA.address);
     await expect(
       sellerForm.getByRole("textbox", { name: "Email" }),
-    ).toHaveValue(DEFAULT_SELLER_DATA.email);
+    ).toHaveValue(DEFAULT_FROM_DATA.email);
   });
 
   test("switch and restore seller via dropdown", async ({ page }) => {
@@ -452,7 +452,7 @@ test.describe("Seller management", () => {
 
       notesFieldIsVisible: true,
       notes: "",
-    } as const satisfies SellerData;
+    } as const satisfies FromData;
 
     const manageSellerDialog = page.getByTestId(`manage-seller-dialog`);
 
@@ -505,14 +505,14 @@ test.describe("Seller management", () => {
 
     // Verify form reset to default values
     await expect(sellerForm.getByRole("textbox", { name: "Name" })).toHaveValue(
-      DEFAULT_SELLER_DATA.name,
+      DEFAULT_FROM_DATA.name,
     );
     await expect(
       sellerForm.getByRole("textbox", { name: "Address" }),
-    ).toHaveValue(DEFAULT_SELLER_DATA.address);
+    ).toHaveValue(DEFAULT_FROM_DATA.address);
     await expect(
       sellerForm.getByRole("textbox", { name: "Email" }),
-    ).toHaveValue(DEFAULT_SELLER_DATA.email);
+    ).toHaveValue(DEFAULT_FROM_DATA.email);
 
     // Reselect the saved seller from the dropdown
     await sellerDropdown.selectOption({ label: TEST_SELLER_DATA.name });
@@ -566,7 +566,7 @@ test.describe("Seller management", () => {
 
       notesFieldIsVisible: true,
       notes: "This is a test note",
-    } as const satisfies SellerData;
+    } as const satisfies FromData;
 
     const manageSellerDialog = page.getByTestId(`manage-seller-dialog`);
 
@@ -648,35 +648,35 @@ test.describe("Seller management", () => {
 
     // Verify form is reset to default values
     await expect(sellerForm.getByRole("textbox", { name: "Name" })).toHaveValue(
-      DEFAULT_SELLER_DATA.name,
+      DEFAULT_FROM_DATA.name,
     );
     await expect(
       sellerForm.getByRole("textbox", { name: "Address" }),
-    ).toHaveValue(DEFAULT_SELLER_DATA.address);
+    ).toHaveValue(DEFAULT_FROM_DATA.address);
 
     await expect(
       sellerForm.getByRole("textbox", { name: "Email" }),
-    ).toHaveValue(DEFAULT_SELLER_DATA.email);
+    ).toHaveValue(DEFAULT_FROM_DATA.email);
 
     await expect(
       sellerForm
         .getByRole("group", { name: "Seller Tax Number" })
         .getByRole("textbox", { name: "Label" }),
-    ).toHaveValue(DEFAULT_SELLER_DATA.vatNoLabelText);
+    ).toHaveValue(DEFAULT_FROM_DATA.vatNoLabelText);
 
     await expect(
       sellerForm
         .getByRole("group", { name: "Seller Tax Number" })
         .getByRole("textbox", { name: "Value" }),
-    ).toHaveValue(DEFAULT_SELLER_DATA.vatNo);
+    ).toHaveValue(DEFAULT_FROM_DATA.vatNo);
 
     await expect(
       sellerForm.getByRole("textbox", { name: "Account Number" }),
-    ).toHaveValue(DEFAULT_SELLER_DATA.accountNumber);
+    ).toHaveValue(DEFAULT_FROM_DATA.accountNumber);
 
     await expect(
       sellerForm.getByRole("textbox", { name: "SWIFT/BIC" }),
-    ).toHaveValue(DEFAULT_SELLER_DATA.swiftBic);
+    ).toHaveValue(DEFAULT_FROM_DATA.swiftBic);
   });
 
   test("switches reset to defaults after dialog close and reopen", async ({
@@ -920,7 +920,7 @@ test.describe("Seller management", () => {
 
       // Draft text is gone — form was reset with pre-fill values
       await expect(nameInput).not.toHaveValue("Draft Seller");
-      await expect(nameInput).toHaveValue(DEFAULT_SELLER_DATA.name);
+      await expect(nameInput).toHaveValue(DEFAULT_FROM_DATA.name);
     });
 
     test("toggling switch ON with dirty form - Keep editing preserves draft and switch stays OFF", async ({
@@ -1097,7 +1097,7 @@ test.describe("Seller management", () => {
     const storedData = (await page.evaluate(() =>
       localStorage.getItem("EASY_INVOICE_PDF_SELLERS"),
     )) as string;
-    const parsedData = JSON.parse(storedData) as SellerData[];
+    const parsedData = JSON.parse(storedData) as FromData[];
 
     expect(parsedData).toHaveLength(1);
     expect(parsedData[0].name).toBe("Acme Corp");
@@ -1161,7 +1161,7 @@ test.describe("Seller management", () => {
     const storedData = (await page.evaluate(() =>
       localStorage.getItem("EASY_INVOICE_PDF_SELLERS"),
     )) as string;
-    const parsedData = JSON.parse(storedData) as SellerData[];
+    const parsedData = JSON.parse(storedData) as FromData[];
 
     expect(parsedData).toHaveLength(1);
     expect(parsedData[0].name).toBe("Acme Corp");

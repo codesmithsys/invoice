@@ -8,7 +8,6 @@ interface FooterProps {
   links?: React.ReactNode;
   translations?: {
     footerDescription: React.ReactNode;
-    footerCreatedBy: string;
     resources: string;
   };
 }
@@ -18,7 +17,6 @@ export function Footer({ links, translations }: FooterProps) {
   const footerDescription =
     translations?.footerDescription ?? DEFAULT_FOOTER_DESCRIPTION;
 
-  const footerCreatedBy = translations?.footerCreatedBy ?? "Made by";
   const resources = translations?.resources ?? "Resources";
 
   return (
@@ -134,25 +132,6 @@ export function Footer({ links, translations }: FooterProps) {
           <p className="text-sm text-slate-700">
             © {new Date().getFullYear()} EasyInvoicePDF.com
           </p>
-          <div className="flex items-center gap-1.5 text-sm text-slate-700">
-            <a href="/founder">
-              <img
-                src="https://ik.imagekit.io/fl2lbswwo/avatar.jpeg?updatedAt=1757456439459"
-                alt="Vlad Sazonau"
-                className="size-6 rounded-full"
-                height="24"
-                width="24"
-                loading="lazy"
-                decoding="async"
-              />
-            </a>
-            <span>
-              {footerCreatedBy}{" "}
-              <a href="/founder" className="underline hover:text-black">
-                Vlad Sazonau
-              </a>
-            </span>
-          </div>
         </div>
       </div>
     </footer>

@@ -1,4 +1,4 @@
-import type { BuyerData, SellerData } from "@/app/schema";
+import type { ToData, FromData } from "@/app/schema";
 import { expect, test } from "@playwright/test";
 
 const TEST_SELLER_DATA = {
@@ -20,7 +20,7 @@ const TEST_SELLER_DATA = {
 
   notesFieldIsVisible: true,
   notes: "This is a SELLER test note",
-} as const satisfies SellerData;
+} as const satisfies FromData;
 
 const TEST_BUYER_DATA = {
   name: "TEST BUYER COMPANY",
@@ -35,7 +35,7 @@ const TEST_BUYER_DATA = {
 
   notesFieldIsVisible: true,
   notes: "This is a BUYER test note",
-} as const satisfies BuyerData;
+} as const satisfies ToData;
 
 test.describe("Generate Invoice Link", () => {
   test.beforeEach(async ({ page }) => {

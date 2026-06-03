@@ -92,7 +92,6 @@ export default function AboutPage({ params }: { params: { locale: Locale } }) {
                 </Link>
               ),
             }),
-            footerCreatedBy: t("footer.createdBy"),
             resources: t("footer.links.resources"),
           }}
           links={

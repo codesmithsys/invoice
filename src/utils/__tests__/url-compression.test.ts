@@ -7,11 +7,11 @@ import {
 import {
   type InvoiceData,
   type InvoiceItemData,
-  type SellerData,
-  type BuyerData,
+  type FromData,
+  type ToData,
   invoiceSchema,
-  sellerSchema,
-  buyerSchema,
+  fromSchema,
+  toSchema,
   invoiceItemSchema,
 } from "@/app/schema";
 import { MOCK_INVOICE_DATA, MOCK_INVOICE_ITEM_DATA } from "./data";
@@ -130,14 +130,14 @@ describe("URL Compression Utilities", () => {
           accountNumberFieldIsVisible: true,
           swiftBicFieldIsVisible: true,
           notesFieldIsVisible: true,
-        } as SellerData,
+        } as FromData,
         buyer: {
           name: "Test Buyer",
           address: "456 Test Ave",
           email: "test@buyer.com",
           vatNoFieldIsVisible: true,
           notesFieldIsVisible: true,
-        } as BuyerData,
+        } as ToData,
         items: [
           {
             invoiceItemNumberIsVisible: true,
@@ -517,7 +517,7 @@ describe("URL Compression Utilities", () => {
       // Check that strings remain strings
       expect(typeof decompressedData.language).toBe("string");
       expect(typeof decompressedData.currency).toBe("string");
-      expect(typeof (decompressedData.seller as SellerData).name).toBe(
+      expect(typeof (decompressedData.seller as FromData).name).toBe(
         "string",
       );
     });
@@ -529,19 +529,19 @@ describe("URL Compression Utilities", () => {
 
         const invoiceRootKeys = Object.keys(
           invoiceSchema.shape,
-        ) as (keyof typeof invoiceSchema.shape)[];
+        ) as string[];
 
         const sellerKeys = Object.keys(
-          sellerSchema.shape,
-        ) as (keyof typeof sellerSchema.shape)[];
+          fromSchema.shape,
+        ) as string[];
 
         const buyerKeys = Object.keys(
-          buyerSchema.shape,
-        ) as (keyof typeof buyerSchema.shape)[];
+          toSchema.shape,
+        ) as string[];
 
         const invoiceItemKeys = Object.keys(
           invoiceItemSchema.shape,
-        ) as (keyof typeof invoiceItemSchema.shape)[];
+        ) as string[];
 
         // Combine all keys
         const allKeys = [

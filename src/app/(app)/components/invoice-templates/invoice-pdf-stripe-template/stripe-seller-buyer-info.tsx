@@ -3,7 +3,7 @@ import type { InvoiceData } from "@/app/schema";
 import { INVOICE_PDF_TRANSLATIONS } from "@/app/(app)/pdf-i18n-translations/pdf-translations";
 import type { STRIPE_TEMPLATE_STYLES } from ".";
 
-export function StripeSellerBuyerInfo({
+export function StripeFromToInfo({
   invoiceData,
   styles,
 }: {
@@ -20,7 +20,7 @@ export function StripeSellerBuyerInfo({
         marginBottom: 24,
       }}
     >
-      {/* Seller info */}
+      {/* From info */}
       <View style={{ marginRight: 70, width: "160px" }}>
         <Text style={[styles.fontSize10, styles.fontBold, styles.mb3]}>
           {invoiceData.seller.name}
@@ -40,12 +40,12 @@ export function StripeSellerBuyerInfo({
         ) : null}
         {invoiceData.seller.accountNumberFieldIsVisible ? (
           <Text style={[styles.fontSize9, styles.mb3]}>
-            {t.seller.accountNumber}: {invoiceData.seller.accountNumber}
+            {t.from.accountNumber}: {invoiceData.seller.accountNumber}
           </Text>
         ) : null}
         {invoiceData.seller.swiftBicFieldIsVisible ? (
           <Text style={[styles.fontSize9, styles.mb3]}>
-            {t.seller.swiftBic}: {invoiceData.seller.swiftBic}
+            {t.from.swiftBic}: {invoiceData.seller.swiftBic}
           </Text>
         ) : null}
 
@@ -56,7 +56,7 @@ export function StripeSellerBuyerInfo({
         ) : null}
       </View>
 
-      {/* Buyer info */}
+      {/* To info */}
       <View style={{ width: "160px" }}>
         <Text style={[styles.fontSize10, styles.fontBold, styles.mb3]}>
           {t.stripe.billTo}

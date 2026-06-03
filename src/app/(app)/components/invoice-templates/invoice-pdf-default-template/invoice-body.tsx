@@ -6,7 +6,7 @@ import { InvoiceHeader } from "./invoice-header";
 import { InvoiceItemsTable } from "./invoice-items-table";
 import { InvoicePaymentInfo } from "./invoice-payment-info";
 import { InvoicePaymentTotals } from "./invoice-payment-totals";
-import { InvoiceSellerBuyerInfo } from "./invoice-seller-buyer-info";
+import { InvoiceFromToInfo } from "./invoice-seller-buyer-info";
 import { InvoiceVATSummaryTable } from "./invoice-vat-summary-table";
 import type { PDF_DEFAULT_TEMPLATE_STYLES } from ".";
 import { InvoiceQRCode } from "@/app/(app)/components/invoice-templates/common/invoice-qr-code";
@@ -65,7 +65,7 @@ export const InvoiceBody = ({
   return (
     <>
       <InvoiceHeader invoiceData={invoiceData} styles={styles} />
-      <InvoiceSellerBuyerInfo invoiceData={invoiceData} styles={styles} />
+      <InvoiceFromToInfo invoiceData={invoiceData} styles={styles} />
 
       <InvoiceItemsTable
         invoiceData={invoiceData}

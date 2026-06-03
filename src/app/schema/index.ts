@@ -844,18 +844,18 @@ export const invoiceItemSchema = z.object({
 
 export type InvoiceItemData = z.infer<typeof invoiceItemSchema>;
 
-export const sellerSchema = z.object({
+export const fromSchema = z.object({
   id: z.string().optional(),
 
   name: z
     .string()
-    .min(1, "Seller name is required")
-    .max(500, "Seller name must not exceed 500 characters")
+    .min(1, "From name is required")
+    .max(500, "From name must not exceed 500 characters")
     .trim(),
   address: z
     .string()
-    .min(1, "Seller address is required")
-    .max(500, "Seller address must not exceed 500 characters")
+    .min(1, "From address is required")
+    .max(500, "From address must not exceed 500 characters")
     .trim(),
 
   vatNo: z
@@ -906,20 +906,20 @@ export const sellerSchema = z.object({
   notesFieldIsVisible: z.boolean().default(true),
 });
 
-export type SellerData = z.infer<typeof sellerSchema>;
+export type FromData = z.infer<typeof fromSchema>;
 
-export const buyerSchema = z.object({
+export const toSchema = z.object({
   id: z.string().optional(),
 
   name: z
     .string()
-    .min(1, "Buyer name is required")
-    .max(500, "Buyer name must not exceed 500 characters")
+    .min(1, "To name is required")
+    .max(500, "To name must not exceed 500 characters")
     .trim(),
   address: z
     .string()
-    .min(1, "Buyer address is required")
-    .max(500, "Buyer address must not exceed 500 characters")
+    .min(1, "To address is required")
+    .max(500, "To address must not exceed 500 characters")
     .trim(),
   vatNo: z
     .string()
@@ -954,7 +954,7 @@ export const buyerSchema = z.object({
   notesFieldIsVisible: z.boolean().default(true),
 });
 
-export type BuyerData = z.infer<typeof buyerSchema>;
+export type ToData = z.infer<typeof toSchema>;
 
 /**
  * Invoice schema
@@ -1070,8 +1070,8 @@ export const invoiceSchema = z.object({
    */
   invoiceTypeFieldIsVisible: z.boolean().default(true),
 
-  seller: sellerSchema,
-  buyer: buyerSchema,
+  seller: fromSchema,
+  buyer: toSchema,
 
   items: z.array(invoiceItemSchema).min(1, "At least one item is required"),
   total: z.coerce.number().nonnegative("Total must be non-negative"),
@@ -1189,8 +1189,8 @@ export const PDF_DATA_LOCAL_STORAGE_KEY = "EASY_INVOICE_PDF_DATA";
 export const accordionSchema = z
   .object({
     general: z.boolean(),
-    seller: z.boolean(),
-    buyer: z.boolean(),
+    from: z.boolean(),
+    to: z.boolean(),
     invoiceItems: z.boolean(),
   })
   .strict();

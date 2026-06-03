@@ -91,32 +91,32 @@ export const ENGLISH_INVOICE_REAL_DATA = {
   invoiceType: "Reverse Charge",
   invoiceTypeFieldIsVisible: true,
   seller: {
-    name: env.SELLER_NAME,
-    address: env.SELLER_ADDRESS,
+    name: env.FROM_NAME,
+    address: env.FROM_ADDRESS,
 
-    vatNo: env.SELLER_VAT_NO,
+    vatNo: env.FROM_VAT_NO,
     vatNoLabelText: "VAT no",
     vatNoFieldIsVisible: true,
 
-    email: env.SELLER_EMAIL,
+    email: env.FROM_EMAIL,
     emailFieldIsVisible: true,
-    accountNumber: env.SELLER_ACCOUNT_NUMBER,
+    accountNumber: env.FROM_ACCOUNT_NUMBER,
     accountNumberFieldIsVisible: true,
 
-    swiftBic: env.SELLER_SWIFT_BIC,
+    swiftBic: env.FROM_SWIFT_BIC,
     swiftBicFieldIsVisible: true,
 
     notesFieldIsVisible: true,
   },
   buyer: {
-    name: env.BUYER_NAME,
-    address: env.BUYER_ADDRESS,
+    name: env.TO_NAME,
+    address: env.TO_ADDRESS,
 
-    vatNo: env.BUYER_VAT_NO,
+    vatNo: env.TO_VAT_NO,
     vatNoLabelText: "VAT no",
     vatNoFieldIsVisible: true,
 
-    email: env.BUYER_EMAIL,
+    email: env.TO_EMAIL,
     emailFieldIsVisible: true,
     notesFieldIsVisible: true,
   },

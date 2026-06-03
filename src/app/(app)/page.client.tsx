@@ -18,7 +18,6 @@ import {
   getAppMetadata,
   updateAppMetadata,
 } from "@/app/(app)/utils/get-app-metadata";
-import { Footer } from "@/app/(components)/footer";
 import { GitHubStarCTA } from "@/components/github-star-cta";
 import { Button } from "@/components/ui/button";
 import { haptic } from "@/lib/haptic";
@@ -37,9 +36,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { InvoiceClientPage } from "./components";
-import { showRandomCTAToast } from "./components/cta-toasts";
-import { useCTAToast } from "./contexts/cta-toast-context";
-import { useShowRandomCTAToastOnIdle } from "./hooks/use-show-random-cta-toast";
 import { generateQrCodeDataUrl } from "./utils/generate-qr-code-data-url";
 import { handleInvoiceNumberBreakingChange } from "./utils/invoice-number-breaking-change";
 
@@ -68,8 +64,6 @@ export function AppPageClient({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  const { markCTAActionTriggered, incrementInteractionCount } = useCTAToast();
 
   const urlTemplateSearchParam = searchParams.get("template");
 
@@ -151,11 +145,6 @@ export function AppPageClient({
     };
   }, [invoiceDataState?.qrCodeData, invoiceDataState?.qrCodeIsVisible]);
 
-  // Only show CTA toast on idle in non-CI environments
-  if (!process.env.CI) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useShowRandomCTAToastOnIdle();
-  }
 
   // Helper function to load from localStorage
   const loadFromLocalStorage = useCallback(() => {
@@ -476,9 +465,6 @@ export function AppPageClient({
     setInvoiceDataState(updatedData);
     checkForInvoiceChanges(updatedData);
 
-    // this is used to show CTA toast
-    incrementInteractionCount();
-
     const currentTemplate = searchParams.get("template");
 
     // update the url with the new template
@@ -607,11 +593,6 @@ export function AppPageClient({
                 setTimeout(() => {
                   toast.dismiss();
                 }, 1_500);
-
-                // show CTA toast after x seconds
-                setTimeout(() => {
-                  showRandomCTAToast();
-                }, 2_500);
               })
               .catch((err) => {
                 console.error(
@@ -666,18 +647,12 @@ export function AppPageClient({
                 ...current,
                 invoiceSharedCount: (current?.invoiceSharedCount ?? 0) + 1,
               }));
-
-              // show CTA toast after x seconds (after invoice link notification is shown)
-              setTimeout(() => {
-                showRandomCTAToast();
-              }, 5_500);
             })
             .catch((err) => {
               Sentry.captureException(err);
             });
         }
 
-        markCTAActionTriggered();
       } catch (error) {
         console.error("Failed to share invoice:", error);
         toast.error("Failed to generate shareable link", {
@@ -728,7 +703,6 @@ export function AppPageClient({
           </div>
         </div>
       </div>
-      <Footer />
       <div className="fixed right-1.5 top-1.5 z-50 duration-500 animate-in fade-in slide-in-from-top-4">
         <GitHubStarCTA githubStarsCount={githubStarsCount} />
       </div>
