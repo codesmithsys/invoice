@@ -1,0 +1,85 @@
+name: 🧪 Vitest Unit Tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  unit-tests:
+    name: Run unit tests
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      # we use pinned versions because there are safer to use: https://x.com/paulmillr/status/1900948425325031448
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        name: 🛎️ Checkout repository
+        with:
+          persist-credentials: false
+
+      - uses: SocketDev/action@ba6de6cc0565af1f42295590380973573297e31f # v1.3.2
+        name: 🔒 Setup Socket Firewall
+        with:
+          mode: firewall-free
+
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        name: 📚 Setup Node.js
+        with:
+          node-version: lts/*
+
+      - name: 📦 Enable Corepack
+        run: corepack enable
+
+      - name: 📦 Install pinned package manager # from package.json
+        run: corepack install
+
+      - name: 🚚 Install dependencies
+        run: sfw pnpm install --frozen-lockfile # firewall to block malicious packages from being installed https://docs.socket.dev/docs/socket-firewall-overview
+
+      - name: 🧪 Run Vitest tests
+        id: vitest
+        run: pnpm vitest run --reporter=verbose
+        continue-on-error: true
+
+      - name: 🔍 Get PR URL
+        if: steps.vitest.outcome == 'failure'
+        id: pr-url
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPOSITORY: ${{ github.repository }}
+          GH_REPOSITORY_OWNER: ${{ github.repository_owner }}
+          GH_REF_NAME: ${{ github.ref_name }}
+        run: |
+          PR_URL=$(curl -s \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$GH_REPOSITORY/pulls?head=$GH_REPOSITORY_OWNER:$GH_REF_NAME" \
+            | jq -r '.[0].html_url // empty')
+          echo "pr_url=$PR_URL" >> "$GITHUB_OUTPUT"
+
+      - name: 📧 Send email
+        if: steps.vitest.outcome == 'failure'
+        # https://github.com/dawidd6/action-send-mail
+        uses: dawidd6/action-send-mail@d38f3f7cd391cdebfe0d38efc3998b935e951c4f # v16
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          from: "GitHub Actions (no-reply) <${{ secrets.EMAIL_USERNAME }}>"
+          to: ${{ secrets.EMAIL_USERNAME }}
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: ❌ Unit Tests Failed for ${{ github.repository }}
+          body: |
+            Unit tests for ${{ github.repository }} have failed.
+
+            For more details, please check:
+            - GitHub Actions run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            ${{ steps.pr-url.outputs.pr_url && format('- Pull Request: {0}', steps.pr-url.outputs.pr_url) }}
+
+      - name: ❌ Mark workflow failed on Unit Tests failure
+        if: steps.vitest.outcome == 'failure'
+        run: exit 1

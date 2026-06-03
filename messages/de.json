@@ -1,0 +1,111 @@
+{
+  "Metadata": {
+    "about": {
+      "title": "Kostenloser PDF-Rechnungsgenerator – Über EasyInvoicePDF",
+      "description": "EasyInvoicePDF erklärt: kostenlose PDF-Rechnungen, Live-Vorschau, Verarbeitung im Browser, Vorlagen und teilbare Links. Open Source, ohne Anmeldung.",
+      "keywords": "kostenloser Rechnungsgenerator, PDF-Rechnung erstellen, Online-Rechnungstool, Abrechnungssoftware, Open-Source-Rechnung",
+      "siteName": "EasyInvoicePDF.com | Kostenloser Rechnungsgenerator"
+    }
+  },
+  "About": {
+    "tagline": "Kostenloser Rechnungsgenerator",
+    "hero": {
+      "title": "Erstellen Sie professionelle Rechnungen in Sekunden",
+      "description": "EasyInvoicePDF ist ein <span>kostenloses</span> Open-Source-Tool, mit dem Sie professionelle Rechnungen mit <span>Echtzeit-Vorschau</span> erstellen, anpassen und herunterladen können. Läuft vollständig in Ihrem Browser."
+    },
+    "features": {
+      "badge": "Funktionen",
+      "title": "Alles, was Sie für professionelle Rechnungsstellung brauchen",
+      "description": "Unser einfacher, aber leistungsstarker Rechnungsgenerator enthält alle Funktionen, die Sie für die schnelle Erstellung professioneller Rechnungen benötigen.",
+      "comingSoon": "Pro-Version und API in Kürze verfügbar",
+      "items": {
+        "livePreview": {
+          "title": "Live-Vorschau",
+          "description": "Sehen Sie, wie sich Ihre Rechnung in Echtzeit aktualisiert, während Sie Änderungen vornehmen, und stellen Sie sicher, dass sie genau so aussieht, wie Sie es möchten."
+        },
+        "shareableLinks": {
+          "title": "Teilbare Links",
+          "description": "Generieren Sie Links, um Ihre Rechnungen direkt mit Kunden zu teilen, ohne Anhänge senden zu müssen."
+        },
+        "instantDownload": {
+          "title": "Sofortiger Download",
+          "description": "Laden Sie Ihre Rechnung mit einem Klick als PDF-Datei herunter, bereit zum Versenden oder Drucken."
+        },
+        "multiLanguage": {
+          "title": "Mehrere Sprachen & Währungen",
+          "description": "Erstellen Sie Rechnungen in zehn Sprachen (Englisch, Polnisch, Deutsch, Spanisch, Portugiesisch, Russisch, Ukrainisch, Französisch, Italienisch, Niederländisch) mit Unterstützung für alle wichtigen Währungen und automatischer Formatierung."
+        },
+        "taxSupport": {
+          "title": "Flexibles Steuersystem",
+          "description": "Unterstützung für jedes Steuersystem einschließlich MwSt., Sales Tax, GST und mehr. Vollständig anpassbar an Ihre lokalen Anforderungen."
+        },
+        "openSource": {
+          "title": "Open Source",
+          "description": "Völlig kostenlos und Open-Source. Nutzen Sie es online oder hosten Sie es selbst mit vollem Zugriff auf den Code."
+        },
+        "qrCodeMultiPDFpageSupport": {
+          "title": "QR-Code & Mehrseitige PDF-Unterstützung",
+          "description": "Fügen Sie QR-Codes mit Zahlungslinks zu Ihren Rechnungen hinzu und erstellen Sie mehrseitige PDFs für längere Rechnungen mit vielen Positionen."
+        }
+      }
+    },
+    "cta": {
+      "title": "Bereit, Ihre Rechnungsstellung zu vereinfachen?",
+      "description": "Beginnen Sie jetzt mit der Erstellung professioneller Rechnungen in Sekunden mit unserem kostenlosen Open-Source-Tool.",
+      "noSignup": "Keine Anmeldung erforderlich. 100% kostenlos und Open-Source."
+    },
+    "footer": {
+      "description": "Ein kostenloses Open-Source-Tool zur Erstellung professioneller PDF-Rechnungen mit Live-Vorschau.<br></br><br></br>Keine Buchhaltungssoftware. Keine Compliance-Garantien. Durch die Nutzung dieses Tools stimmen Sie den <tosLink>Nutzungsbedingungen</tosLink> zu.",
+      "links": {
+        "invoiceGenerator": "Rechnungsgenerator",
+        "features": "Funktionen",
+        "github": "GitHub",
+        "changelog": "Änderungen",
+        "founder": "Gründer",
+        "resources": "Ressourcen",
+        "termsOfService": "Nutzungsbedingungen"
+      },
+      "createdBy": "Erstellt von"
+    },
+    "buttons": {
+      "goToApp": "Öffnen",
+      "home": "Über uns",
+      "viewOnGithub": "Auf GitHub ansehen",
+      "starOnGithub": "GitHub",
+      "switchLanguage": "Sprache wechseln",
+      "shareFeedback": "Feedback teilen",
+      "app": "App",
+      "startInvoicing": "Zur App gehen"
+    }
+  },
+  "FAQ": {
+    "title": "Häufig gestellte Fragen",
+    "description": "Antworten zu Kostenlosigkeit, Datenschutz, PDF-Download, Nutzung ohne Konto und Teilen von Rechnungen mit Kunden.",
+    "items": {
+      "whatIs": {
+        "question": "Was ist EasyInvoicePDF?",
+        "answer": "EasyInvoicePDF ist ein kostenloses, Open-Source-Programm zum Erstellen professioneller PDF-Rechnungen in kurzer Zeit. Es enthält eine Live-PDF-Vorschau, anpassbare Vorlagen sowie Unterstützung für mehrere Sprachen und Währungen."
+      },
+      "isFree": {
+        "question": "Ist es wirklich kostenlos?",
+        "answer": "Ja, EasyInvoicePDF ist völlig kostenlos. Das gesamte Projekt ist Open-Source und auf GitHub verfügbar."
+      },
+      "accountNeeded": {
+        "question": "Muss ich ein Konto erstellen?",
+        "answer": "Nein, weder Konto noch Registrierung sind nötig. Sie können sofort Rechnungen erstellen und PDFs mit einem Klick herunterladen."
+      },
+      "customization": {
+        "question": "Kann ich die Rechnungsvorlage anpassen?",
+        "answer": "Ja. Sie passen Firmendaten, Währung, Sprache, Steuern und Layout im Editor an. Weitere Vorlagenoptionen werden regelmäßig ergänzt."
+      },
+      "dataSecurity": {
+        "question": "Sind meine Daten sicher?",
+        "answer": "Rechnungsdaten werden für Vorschau und PDF-Erstellung clientseitig in Ihrem Browser verarbeitet. Wir speichern Ihre Rechnungsinhalte nicht auf unseren Servern."
+      },
+      "sharing": {
+        "question": "Kann ich Rechnungen mit anderen teilen?",
+        "answer": "Ja. Sie erstellen einen teilbaren Link, damit Kunden die Rechnung sehen und das PDF herunterladen können. Nur Personen mit dem Link haben Zugriff."
+      }
+    }
+  }
+}

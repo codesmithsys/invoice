@@ -1,0 +1,68 @@
+name: 🔒 pnpm supply-chain policy
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  pnpm-policy:
+    name: Verify pnpm supply-chain config
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      # we use pinned versions because there are safer to use: https://x.com/paulmillr/status/1900948425325031448
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        name: 🛎️ Checkout repository
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        name: 📚 Setup Node.js
+        with:
+          node-version: lts/*
+
+      - name: 📦 Enable Corepack
+        run: corepack enable
+
+      - name: 📦 Install pinned package manager # from package.json
+        run: corepack install
+
+      - name: Verify pnpm supply-chain config
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_pnpm_version="10.16.0"
+          actual_pnpm_version="$(pnpm --version)"
+
+          if ! printf '%s\n%s\n' "$required_pnpm_version" "$actual_pnpm_version" | sort -CV; then
+            echo "❌ pnpm version must be >= $required_pnpm_version (got $actual_pnpm_version)"
+            exit 1
+          fi
+
+          echo "✅ pnpm version=$actual_pnpm_version (>= $required_pnpm_version)"
+
+          verify_config() {
+            local key="$1"
+            local expected="$2"
+
+            local actual
+            actual="$(pnpm config get "$key" --location project 2>/dev/null || true)"
+            actual="${actual%\"}"
+            actual="${actual#\"}"
+
+            if [[ "$actual" != "$expected" ]]; then
+              echo "❌ $key mismatch: expected '$expected', got '${actual:-<empty>}'"
+              exit 1
+            fi
+
+            echo "✅ $key=$actual"
+          }
+
+          verify_config minimum-release-age 7200
+          verify_config block-exotic-subdeps true
+          verify_config trust-policy no-downgrade

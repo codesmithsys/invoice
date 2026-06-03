@@ -1,0 +1,71 @@
+name: 🔒 zizmor static analysis tool for GitHub Actions # https://docs.zizmor.sh/
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: ["**"]
+
+permissions: {}
+
+jobs:
+  zizmor:
+    name: Run zizmor
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write # Required for upload-sarif to upload SARIF files.
+      contents: read
+      actions: read # Needed for upload-sarif to read workflow run info.
+    steps:
+      # we use pinned versions because there are safer to use: https://x.com/paulmillr/status/1900948425325031448
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        name: 🛎️ Checkout repository
+        with:
+          persist-credentials: false
+
+      - name: 🔎 Run zizmor
+        id: zizmor
+        continue-on-error: true
+        # https://github.com/zizmorcore/zizmor-action
+        uses: zizmorcore/zizmor-action@b1d7e1fb5de872772f31590499237e7cce841e8e # v0.5.3
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🔍 Get PR URL
+        if: steps.zizmor.outcome == 'failure'
+        id: pr-url
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPOSITORY: ${{ github.repository }}
+          GH_REPOSITORY_OWNER: ${{ github.repository_owner }}
+          GH_REF_NAME: ${{ github.ref_name }}
+        run: |
+          PR_URL=$(curl -s \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$GH_REPOSITORY/pulls?head=$GH_REPOSITORY_OWNER:$GH_REF_NAME" \
+            | jq -r '.[0].html_url // empty')
+          echo "pr_url=$PR_URL" >> "$GITHUB_OUTPUT"
+
+      - name: 📧 Send email
+        if: steps.zizmor.outcome == 'failure'
+        # https://github.com/dawidd6/action-send-mail
+        uses: dawidd6/action-send-mail@d38f3f7cd391cdebfe0d38efc3998b935e951c4f # v16
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          from: "GitHub Actions (no-reply) <${{ secrets.EMAIL_USERNAME }}>"
+          to: ${{ secrets.EMAIL_USERNAME }}
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: ❌ zizmor Failed for ${{ github.repository }}
+          body: |
+            zizmor security analysis for ${{ github.repository }} has failed.
+
+            For more details, please check:
+            - GitHub Actions run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            ${{ steps.pr-url.outputs.pr_url && format('- Pull Request: {0}', steps.pr-url.outputs.pr_url) }}
+
+      - name: ❌ Mark workflow failed on zizmor failure
+        if: steps.zizmor.outcome == 'failure'
+        run: exit 1

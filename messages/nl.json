@@ -1,0 +1,111 @@
+{
+  "Metadata": {
+    "about": {
+      "title": "Gratis PDF-factuurgenerator - Over EasyInvoicePDF",
+      "description": "EasyInvoicePDF in het kort: gratis PDF-facturen, live preview, verwerking in de browser, sjablonen en deelbare links. Open source, geen registratie.",
+      "keywords": "gratis factuurgenerator, PDF-factuur online, facturatieprogramma, billingsoftware, open source factuur",
+      "siteName": "EasyInvoicePDF.com | Gratis Factuur Generator"
+    }
+  },
+  "About": {
+    "tagline": "Gratis factuurgenerator",
+    "hero": {
+      "title": "Maak professionele facturen in seconden",
+      "description": "EasyInvoicePDF is een <span>gratis</span>, open-source tool waarmee je professionele facturen kunt maken, aanpassen en downloaden met <span>realtime voorbeeld</span>. Draait volledig in je browser."
+    },
+    "features": {
+      "badge": "Functies",
+      "title": "Alles wat je nodig hebt voor professionele facturering",
+      "description": "Onze eenvoudige maar krachtige factuur generator bevat alle functies die je nodig hebt om snel professionele facturen te maken.",
+      "comingSoon": "Pro-versie en API binnenkort beschikbaar",
+      "items": {
+        "livePreview": {
+          "title": "Live Voorbeeld",
+          "description": "Bekijk je factuur in realtime bijwerken terwijl je wijzigingen aanbrengt, zodat deze er precies uitziet zoals je wilt."
+        },
+        "shareableLinks": {
+          "title": "Deelbare Links",
+          "description": "Genereer links om je facturen direct met klanten te delen zonder bijlagen te versturen."
+        },
+        "instantDownload": {
+          "title": "Directe Download",
+          "description": "Download je factuur als PDF-bestand met één klik, klaar om te verzenden of af te drukken."
+        },
+        "multiLanguage": {
+          "title": "Meerdere Talen & Valuta's",
+          "description": "Maak facturen in tien talen (Engels, Pools, Duits, Spaans, Portugees, Russisch, Oekraïens, Frans, Italiaans, Nederlands) met ondersteuning voor alle belangrijke valuta's en automatische opmaak."
+        },
+        "taxSupport": {
+          "title": "Flexibel Belastingsysteem",
+          "description": "Ondersteuning voor elk belastingsysteem inclusief BTW, Sales Tax, GST en meer. Volledig aanpasbaar aan uw lokale vereisten."
+        },
+        "openSource": {
+          "title": "Open Source",
+          "description": "Volledig gratis en open-source. Gebruik het online of host het zelf met volledige toegang tot de code."
+        },
+        "qrCodeMultiPDFpageSupport": {
+          "title": "QR-code & Meerdere Pagina's PDF-ondersteuning",
+          "description": "Voeg QR-codes met betaallinks toe aan je facturen en genereer PDF's met meerdere pagina's voor langere facturen met veel items."
+        }
+      }
+    },
+    "cta": {
+      "title": "Klaar om je facturering te vereenvoudigen?",
+      "description": "Begin met het maken van professionele facturen in seconden met onze gratis, open-source tool.",
+      "noSignup": "Geen registratie vereist. 100% gratis en open-source."
+    },
+    "footer": {
+      "description": "Een gratis, open-source tool voor het maken van professionele PDF-facturen met realtime voorbeeld.<br></br><br></br>Geen boekhoudsoftware. Geen nalevingsgaranties. Door deze tool te gebruiken, gaat u akkoord met de <tosLink>Servicevoorwaarden</tosLink>.",
+      "links": {
+        "invoiceGenerator": "Factuurgenerator",
+        "features": "Functies",
+        "github": "GitHub",
+        "changelog": "Nieuw",
+        "founder": "Oprichter",
+        "resources": "Bronnen",
+        "termsOfService": "Servicevoorwaarden"
+      },
+      "createdBy": "Gemaakt door"
+    },
+    "buttons": {
+      "goToApp": "Open",
+      "home": "Over ons",
+      "viewOnGithub": "Bekijk op GitHub",
+      "starOnGithub": "GitHub",
+      "switchLanguage": "Verander taal",
+      "shareFeedback": "Feedback delen",
+      "app": "App",
+      "startInvoicing": "Begin met factureren"
+    }
+  },
+  "FAQ": {
+    "title": "Veelgestelde Vragen",
+    "description": "Antwoorden over gratis gebruik, privacy, PDF-download, gebruik zonder account en facturen delen met klanten.",
+    "items": {
+      "whatIs": {
+        "question": "Wat is EasyInvoicePDF?",
+        "answer": "EasyInvoicePDF is een gratis, open-source factuurmaker om snel professionele PDF-facturen te maken. Er is live PDF-voorbeeld, aanpasbare sjablonen en ondersteuning voor meerdere talen en valuta's."
+      },
+      "isFree": {
+        "question": "Is het echt gratis?",
+        "answer": "Ja, EasyInvoicePDF is volledig gratis. Het hele project is open-source en beschikbaar op GitHub."
+      },
+      "accountNeeded": {
+        "question": "Moet ik een account aanmaken?",
+        "answer": "Geen account of registratie nodig. Je maakt meteen facturen en downloadt de PDF met één klik."
+      },
+      "customization": {
+        "question": "Kan ik de factuursjabloon aanpassen?",
+        "answer": "Ja. Pas bedrijfsgegevens, valuta, taal, belastingen en lay-out in de editor aan. We voegen regelmatig extra sjabloonopties toe."
+      },
+      "dataSecurity": {
+        "question": "Zijn mijn gegevens veilig?",
+        "answer": "Factuurgegevens worden in de browser verwerkt voor voorbeeld en PDF-generatie. We slaan de inhoud van je facturen niet op onze servers op."
+      },
+      "sharing": {
+        "question": "Kan ik facturen delen met anderen?",
+        "answer": "Ja. Je maakt een deelbare link zodat klanten de factuur zien en de PDF downloaden. Alleen mensen met de link kunnen deze openen."
+      }
+    }
+  }
+}

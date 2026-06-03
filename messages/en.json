@@ -1,0 +1,111 @@
+{
+  "Metadata": {
+    "about": {
+      "title": "Free Invoice Generator PDF - EasyInvoicePDF",
+      "description": "Create and download PDF invoices instantly with EasyInvoicePDF. Free, open-source, client-side invoice generator with live preview, templates, and shareable links. No signup required.",
+      "keywords": "free invoice generator, PDF invoice maker, online invoice tool, billing software, open source invoice",
+      "siteName": "EasyInvoicePDF.com | Free Invoice Generator"
+    }
+  },
+  "About": {
+    "tagline": "Free & Open-Source Invoice Generator",
+    "hero": {
+      "title": "Create professional invoices in seconds",
+      "description": "EasyInvoicePDF is a <span>free, open-source</span> invoice generator with real-time preview. Create, customize, and download professional invoices. <span>No sign-up required.</span>"
+    },
+    "features": {
+      "badge": "Features",
+      "title": "Everything you need for professional invoicing",
+      "description": "Create professional invoices with live preview, instant PDF downloads, multi-language support, flexible tax systems and more.",
+      "comingSoon": "API support and recurring invoices - coming soon",
+      "items": {
+        "livePreview": {
+          "title": "Live Preview",
+          "description": "See your invoice update in real-time as you make changes, ensuring it looks exactly how you want."
+        },
+        "shareableLinks": {
+          "title": "Shareable Links",
+          "description": "Generate links to share your invoices directly with clients without sending attachments."
+        },
+        "instantDownload": {
+          "title": "Instant Download",
+          "description": "Download your invoice as a PDF file with one click, ready to be sent or printed."
+        },
+        "multiLanguage": {
+          "title": "Multiple Languages & Currencies",
+          "description": "Create invoices in ten languages (English, Polish, German, Spanish, Portuguese, Russian, Ukrainian, French, Italian, Dutch) with support for all major currencies and automatic formatting."
+        },
+        "taxSupport": {
+          "title": "Flexible Tax System Support",
+          "description": "Support for any tax system including VAT, Sales Tax, GST, and more. Fully customizable to match your local requirements."
+        },
+        "openSource": {
+          "title": "Open Source",
+          "description": "Completely free and open-source. Use it online or host it yourself with full access to the code."
+        },
+        "qrCodeMultiPDFpageSupport": {
+          "title": "QR Code & Multi-Page PDF Support",
+          "description": "Add QR codes with payment links to your invoices and generate multi-page PDFs for longer invoices with many line items."
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to simplify your invoicing?",
+      "description": "Start creating professional invoices in seconds with our free, open-source tool.",
+      "noSignup": "No sign-up required. 100% free and open-source."
+    },
+    "footer": {
+      "description": "Create professional invoices in seconds with our free & open-source invoice maker. 100% in-browser, no sign-up required. Includes live PDF preview and a Stripe-style template - perfect for freelancers, startups, and small businesses.<br></br><br></br>Not accounting software. No compliance guarantees. By using this tool, you agree to the <tosLink>Terms of Service</tosLink>.",
+      "links": {
+        "invoiceGenerator": "Invoice Generator",
+        "features": "Features",
+        "github": "GitHub",
+        "changelog": "Changelog",
+        "founder": "Founder",
+        "resources": "Resources",
+        "termsOfService": "Terms of Service"
+      },
+      "createdBy": "Made by"
+    },
+    "buttons": {
+      "goToApp": "Open app",
+      "home": "About Us",
+      "viewOnGithub": "Star on GitHub",
+      "starOnGithub": "Star on GitHub",
+      "switchLanguage": "Switch language",
+      "shareFeedback": "Share feedback",
+      "app": "App",
+      "startInvoicing": "Start Invoicing"
+    }
+  },
+  "FAQ": {
+    "title": "Frequently Asked Questions",
+    "description": "Answers about our free PDF invoice generator: pricing, privacy, customizing templates, working without an account, and sharing invoices with clients.",
+    "items": {
+      "whatIs": {
+        "question": "What is EasyInvoicePDF?",
+        "answer": "EasyInvoicePDF is a free online PDF invoice generator and open-source invoice maker. You build professional invoices in the browser with a live PDF preview, flexible tax and currency settings, and printed labels in multiple languages. It suits freelancers, consultants, and small businesses that want fast invoicing without installing paid software."
+      },
+      "isFree": {
+        "question": "Is EasyInvoicePDF free to use?",
+        "answer": "Yes. Core invoicing, live preview, and PDF download are free with no paid subscription. The project is open source on GitHub, so you can inspect the code or self-host if you prefer."
+      },
+      "accountNeeded": {
+        "question": "Do I need an account to create or download a PDF invoice?",
+        "answer": "No sign-up or login is required. Open the editor, enter your details, and download a PDF in one click. Your draft stays in your browser until you leave the page or clear it."
+      },
+      "customization": {
+        "question": "Can I customize the PDF invoice template and fields?",
+        "answer": "Yes. You can set seller and buyer details, line items, currency, tax labels and amounts, language for dates and labels, and layout options that change how the PDF looks. New template controls are added over time."
+      },
+      "dataSecurity": {
+        "question": "Is my invoice data secure and private?",
+        "answer": "Preview and PDF generation run in your browser from the data you enter there. We do not store your invoice content on our servers for normal editing and download. Shareable links keep a compressed copy of the invoice inside the URL, not in a user account on our servers."
+      },
+      "sharing": {
+        "question": "How do I share an invoice with a client?",
+        "answer": "Use the share action in the editor to copy a link. The link carries your invoice data so recipients can open it in their browser, review the invoice, and download the PDF without signing up. Anyone with the full link can open it, so only send it to people you trust."
+      }
+    }
+  }
+}
