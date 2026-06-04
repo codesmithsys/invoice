@@ -1,12 +1,3 @@
-<?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-set_error_handler(function($errno, $errstr, $errfile, $errline) {
-    echo "<div style='background:#fee;border:2px solid red;padding:20px;margin:20px;font-family:monospace;'><b>PHP ERROR:</b> $errstr<br><b>File:</b> $errfile<br><b>Line:</b> $errline</div>";
-    return false;
-});
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

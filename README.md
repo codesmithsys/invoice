@@ -190,6 +190,71 @@ DB_PASS   = ${{MySQL.MYSQLPASSWORD}}
 
 > **Note:** The free Railway trial includes $5 of credit. After that, the hobby plan starts at ~$5/month + usage. The MySQL plugin is the main cost driver.
 
+## Deploy to InfinityFree (free PHP + MySQL hosting)
+
+InfinityFree is a great way to get a free, permanent public URL for your invoice app — no credit card, no trial limits, free subdomain included. **Live demo: [invoice.great-site.net](https://invoice.great-site.net)**
+
+### 1. Create an InfinityFree account
+1. Sign up free at [infinityfree.com](https://infinityfree.com) (no card required)
+2. From the client area, click **Add Account** and pick a free subdomain (e.g. `yourname.great-site.net` or `yourname.infinityfreeapp.com`)
+3. Wait a few seconds for the account to be provisioned
+
+### 2. Create the MySQL database
+1. Open the **cPanel** for your new account
+2. Go to **MySQL Databases**
+3. Create a new database (e.g. `invoice`) and a database user with a strong password
+4. Add the user to the database with **All Privileges**
+5. Note down these values — you'll need them:
+   - **MySQL Hostname** (usually `localhost` on newer accounts, or `sqlXXX.infinityfree.com`)
+   - **Database Name** (e.g. `if0_12345678_invoice`)
+   - **Username** (e.g. `if0_12345678`)
+   - **Password** (the one you set)
+   - **Port** (`3306`)
+
+### 3. Import the database schema
+1. In cPanel, open **phpMyAdmin**
+2. Select your `if0_xxx_invoice` database from the left sidebar
+3. Click the **Import** tab
+4. Choose `setup.sql` from the project root
+5. Click **Go** — you should see "Import has been successfully finished" with 2 tables (`invoices`, `invoice_items`)
+
+### 4. Configure `config.php`
+1. In cPanel, open **File Manager** and navigate to `htdocs/`
+2. Upload `config.example.php` from the project, then rename the copy to `config.php` (or upload a pre-filled `config.php` from your local machine)
+3. Edit `config.php` and fill in the 5 values from step 2:
+
+```php
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'if0_12345678_invoice');
+define('DB_USER', 'if0_12345678');
+define('DB_PASS', 'your_strong_password');
+define('DB_PORT', '3306');
+```
+
+### 5. Upload the app files
+In cPanel → **File Manager** → `htdocs/`, upload **all files from the project root** EXCEPT:
+- `.git/` (git history)
+- `Dockerfile`, `docker-entrypoint.sh`, `nginx.conf` (Docker-only, not needed)
+- `render.yaml`, `railway.json` (other deployment configs)
+- `.dockerignore`
+
+The fastest way: zip the project on your computer (excluding the above), upload the zip, then **Extract** in cPanel.
+
+### 6. Set uploads folder permissions
+1. In File Manager, right-click the `uploads/` folder → **Permissions**
+2. Set to `755` (or `775` if uploads fail)
+
+### 7. Open the app
+Visit `https://yourname.great-site.net/` — you should see the dashboard. Click **+ New Invoice** to create your first one.
+
+> **InfinityFree notes:**
+> - No shell/SSH access — all DB operations go through phpMyAdmin
+> - Env vars are not reliably supported, so use `config.php` with hardcoded values
+> - PHP 7.4+ and MySQL are available
+> - The `htdocs/` folder is your project root (not the folder above it)
+> - Free forever, no credit card, no trial expiry
+> - Ad are not shown on free subdomains, but resource limits apply (50k hits/day, 5GB disk)
+
 ## Usage
 
 ### Creating an invoice
@@ -263,6 +328,7 @@ The **public share link** is intentionally token-based and read-only, so it's sa
 
 - **[EasyInvoicePDF](https://github.com/VladSez/easy-invoice-pdf)** by [Vlad Sazonau](https://vladsazon.com) — inspiration for the editor UX, live preview, and invoice template design. Licensed under [AGPL-3.0](https://opensource.org/license/AGPL-3.0).
 - QR code generation powered by [goqr.me API](https://goqr.me/api/).
+- Deployed on **[InfinityFree](https://infinityfree.com)** (free PHP + MySQL hosting, no credit card, free subdomain). The live demo at [invoice.great-site.net](https://invoice.great-site.net) runs on their platform.
 
 ## Contributing
 
