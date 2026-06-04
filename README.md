@@ -193,7 +193,6 @@ The **public share link** is intentionally token-based and read-only, so it's sa
 ## Credits
 
 - **[EasyInvoicePDF](https://github.com/VladSez/easy-invoice-pdf)** by [Vlad Sazonau](https://vladsazon.com) — inspiration for the editor UX, live preview, and invoice template design. Licensed under [AGPL-3.0](https://opensource.org/license/AGPL-3.0).
-- **[Favicon](https://github.com/VladSez/easy-invoice-pdf)** — the shield icon is derived from EasyInvoicePDF's branding.
 - QR code generation powered by [goqr.me API](https://goqr.me/api/).
 
 ## Contributing
