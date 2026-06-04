@@ -2,6 +2,10 @@ RewriteEngine On
 
 DirectoryIndex index.php
 
+<FilesMatch "\.(sh|sql|md|example\.php|gitignore|dockerignore)$">
+    Require all denied
+</FilesMatch>
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
