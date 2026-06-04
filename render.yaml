@@ -3,7 +3,7 @@ databases:
     databaseName: invoice
     user: invoice
     plan: free
-    ipAllowList: [] # since we only allow internal connections
+    ipAllowList: []
 
 services:
   - type: web
@@ -17,6 +17,8 @@ services:
     envVars:
       - key: PORT
         value: 10000
+      - key: DB_TYPE
+        value: pgsql
       - key: DB_HOST
         fromDatabase:
           name: invoice-db

@@ -1,52 +1,49 @@
 #!/bin/bash
-set -e
+set +e
 
-# Render assigns a port via $PORT (default 10000)
-# Railway assigns port via $PORT (default 8080)
-# Default to 8080 if neither is set
 export PORT="${PORT:-8080}"
+echo "=== Starting invoice app on port $PORT ===" >&2
 
-echo "Starting invoice app on port $PORT..."
-
-# Update nginx config to listen on the right port
+# Update nginx port
 sed -i "s/listen 8080 default_server;/listen $PORT default_server;/" /etc/nginx/sites-available/default
 sed -i "s/listen 8080;/listen $PORT;/" /etc/nginx/sites-available/default
 
-# Update healthcheck port - Render checks the PORT directly
-echo "Nginx will listen on port: $PORT"
-
-if [ -n "$DB_HOST" ] && [ -n "$DB_NAME" ] && [ -n "$DB_USER" ]; then
-    echo "Waiting for MySQL at $DB_HOST:${DB_PORT:-3306}..."
-    READY=0
-    for i in $(seq 1 30); do
-        if mysql -h "$DB_HOST" -P "${DB_PORT:-3306}" -u "$DB_USER" -p"${DB_PASS}" -e "SELECT 1" >/dev/null 2>&1; then
-            echo "MySQL is ready."
-            READY=1
-            break
-        fi
-        echo "  attempt $i/30..."
-        sleep 2
-    done
-
-    if [ "$READY" = "1" ]; then
-        EXISTS=$(mysql -h "$DB_HOST" -P "${DB_PORT:-3306}" -u "$DB_USER" -p"${DB_PASS}" -e "SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME='$DB_NAME'" -sN 2>/dev/null || echo "")
-
-        if [ -z "$EXISTS" ]; then
-            echo "Database $DB_NAME not found. Creating from setup.sql..."
-            mysql -h "$DB_HOST" -P "${DB_PORT:-3306}" -u "$DB_USER" -p"${DB_PASS}" < /var/www/html/setup.sql
-            echo "Database initialized."
-        else
-            echo "Database $DB_NAME already exists. Skipping setup."
-        fi
-    else
-        echo "WARNING: MySQL not ready after 60s. Starting web server anyway - app may show errors until DB is reachable."
-    fi
-else
-    echo "DB_HOST/DB_NAME/DB_USER not set. Skipping DB init."
-fi
-
-echo "Starting php-fpm..."
+# Always start the web server first so the port is open for health checks.
+# DB init happens in background.
+echo "=== Starting php-fpm ===" >&2
 php-fpm -D
 
-echo "Starting nginx..."
+# Start DB init in background
+(
+  if [ -n "$DB_HOST" ] && [ -n "$DB_NAME" ] && [ -n "$DB_USER" ]; then
+      echo "=== Waiting for database at $DB_HOST:${DB_PORT:-5432} ===" >&2
+      READY=0
+      for i in $(seq 1 30); do
+          if PGPASSWORD="$DB_PASS" psql -h "$DB_HOST" -p "${DB_PORT:-5432}" -U "$DB_USER" -d "$DB_NAME" -c "SELECT 1" >/dev/null 2>&1; then
+              echo "=== Database is ready ===" >&2
+              READY=1
+              break
+          fi
+          echo "  attempt $i/30..." >&2
+          sleep 2
+      done
+
+      if [ "$READY" = "1" ]; then
+          EXISTS=$(PGPASSWORD="$DB_PASS" psql -h "$DB_HOST" -p "${DB_PORT:-5432}" -U "$DB_USER" -d "$DB_NAME" -tAc "SELECT to_regclass('public.invoices');" 2>/dev/null | tr -d ' ' || echo "")
+          if [ -z "$EXISTS" ] || [ "$EXISTS" = "" ]; then
+              echo "=== Tables not found. Initializing from setup.sql ===" >&2
+              PGPASSWORD="$DB_PASS" psql -h "$DB_HOST" -p "${DB_PORT:-5432}" -U "$DB_USER" -d "$DB_NAME" -f /var/www/html/setup.sql
+              echo "=== Database initialized ===" >&2
+          else
+              echo "=== Tables already exist. Skipping setup ===" >&2
+          fi
+      else
+          echo "=== WARNING: Database not ready after 60s. App will retry on request. ===" >&2
+      fi
+  else
+      echo "=== DB env vars not set. Assuming external DB. ===" >&2
+  fi
+) &
+
+echo "=== Starting nginx ===" >&2
 exec nginx -g 'daemon off;'
