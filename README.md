@@ -1,0 +1,189 @@
+# InvoiceApp
+
+A clean, self-hosted invoice management app built with **PHP + MySQL**. Create, edit, and share professional A4-sized invoices with live preview, PDF export, QR codes, and shareable links.
+
+![InvoiceApp](https://img.shields.io/badge/PHP-8.0%2B-777BB4) ![MySQL](https://img.shields.io/badge/MySQL-5.7%2B-4479A1) ![License](https://img.shields.io/badge/license-MIT-green)
+
+## Features
+
+- **Live preview editor** — see changes as you type (split-screen 33/67 layout)
+- **Two invoice templates** — Classic (light, clean) and Modern (gradient header)
+- **A4-sized PDF output** — print-ready, single-page
+- **Shareable links** — generate tokenized URLs to share invoices with anyone
+- **QR codes** — opt-in QR on invoice for payments/links
+- **Custom logo upload** — with size slider, removable
+- **Custom footer text** — per invoice
+- **80+ currencies** — with proper symbols and names
+- **Amount in words** — auto-generated from total
+- **Discount + tax** — % or fixed discount, applied before tax
+- **Payment tracking** — To pay / Paid / Left to pay
+- **Search + filter** — by invoice number, client, or status
+- **Duplicate invoice** — clone any invoice as a new draft
+
+## Tech stack
+
+- **Backend:** PHP 8+ (no framework, plain PHP)
+- **Database:** MySQL 5.7+ / MariaDB
+- **Frontend:** Vanilla JS, CSS, no build step
+- **Server:** Apache (LAMP/WAMP/MAMP)
+- **PDF:** Browser print-to-PDF (no extra libraries)
+
+## Requirements
+
+- PHP 8.0 or higher (with `pdo_mysql` extension)
+- MySQL 5.7+ or MariaDB 10.3+
+- Apache with `mod_rewrite` (for clean URLs)
+- ~10 MB disk space
+
+## Installation
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/yourusername/invoice-app.git
+cd invoice-app
+```
+
+### 2. Create the database
+
+```bash
+mysql -u root -p < setup.sql
+```
+
+This creates the `invoice` database with two tables: `invoices` and `invoice_items`.
+
+### 3. Configure database credentials
+
+```bash
+cp config.example.php config.php
+```
+
+Edit `config.php` and fill in your database credentials:
+
+```php
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'invoice');
+define('DB_USER', 'your_user');
+define('DB_PASS', 'your_password');
+```
+
+### 4. Set permissions
+
+The `uploads/` directory needs to be writable by the web server:
+
+```bash
+chmod 755 uploads/
+chown www-data:www-data uploads/   # Apache on Debian/Ubuntu
+```
+
+### 5. Point your web server at the project root
+
+**Apache** — Make sure `mod_rewrite` is enabled and `.htaccess` is allowed. The included `.htaccess` handles clean URLs (no `.php` extension needed).
+
+**Nginx** — Add this to your server config:
+
+```nginx
+location / {
+    try_files $uri $uri/ $uri.php?$query_string;
+}
+```
+
+### 6. Open the app
+
+Navigate to `http://localhost/invoice-app/` in your browser. You should see the dashboard with no invoices yet. Click **+ New Invoice** to create your first one.
+
+## Configuration
+
+### Customizing the app
+
+- **Currency list** — edit the `currencies` array in `create.php` (search for `const currencies` or `let currencies`)
+- **Templates** — each template is a JavaScript template literal in `create.php` (search for `if (currentTemplate === 'modern')`)
+- **Logo directory** — change `uploads/` path in the file upload handler in `create.php`
+
+### Environment variables (optional)
+
+Instead of editing `config.php`, you can use environment variables:
+
+```php
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('DB_NAME') ?: 'invoice');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') ?: '');
+```
+
+## Usage
+
+### Creating an invoice
+
+1. Click **+ New Invoice**
+2. Fill in invoice details, your info (From), client info (To)
+3. Add line items
+4. Optionally enable QR code, set discount, tax, payment details
+5. Watch the live preview on the right
+6. Click **Save Invoice**
+
+### Sharing an invoice
+
+1. Open any invoice
+2. Click **Share** in the actions bar
+3. Click **Generate Shareable Link**
+4. Copy the link and send it to your client
+5. Anyone with the link can view and download the invoice (no login required)
+6. Click **Revoke Link** to disable access
+
+### Printing / PDF
+
+- From the editor: click **Download PDF** (opens print dialog → Save as PDF)
+- From the invoice view: click **Print / PDF**
+- From the share link: click **Download PDF**
+
+The output is a single A4 page (210mm × 297mm) with all colors preserved.
+
+## File structure
+
+```
+.
+├── .htaccess                # Apache clean-URL rewrite rules
+├── LICENSE                  # MIT license
+├── README.md                # This file
+├── config.example.php       # Database config template
+├── setup.sql                # Database schema
+├── create.php               # Editor page (split-screen)
+├── index.php                # Dashboard (invoice list)
+├── view.php                 # Invoice detail view (auth)
+├── view-public.php          # Public invoice view (token-based)
+├── share.php                # API for generating/revoking share links
+├── duplicate.php            # Clone invoice handler
+├── delete.php               # Delete invoice handler
+├── style.css                # All app styles
+├── favicon.svg              # App icon
+├── uploads/                 # Logo storage (gitignored)
+│   └── .gitkeep
+```
+
+## Security notes
+
+This app is designed for **self-hosted, single-user use** (e.g., a freelancer or small business owner). It does **not** include:
+
+- User authentication / multi-tenancy
+- CSRF protection
+- Rate limiting
+- Input sanitization beyond `htmlspecialchars` on output
+
+If you want to expose this to the public internet, you should:
+1. Add authentication (e.g., HTTP Basic Auth, or a proper login system)
+2. Add CSRF tokens to all forms
+3. Add rate limiting on `share.php` and `view-public.php`
+4. Use HTTPS (Let's Encrypt)
+5. Move `uploads/` outside the web root and serve via PHP
+6. Restrict `view.php` and the actions to authenticated users only
+
+The **public share link** is intentionally token-based and read-only, so it's safe to share.
+
+## Contributing
+
+Pull requests welcome! For major changes, please open an issue first to discuss.
+
+## License
+
+MIT — see [LICENSE](LICENSE) for details.

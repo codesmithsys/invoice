@@ -1,8 +1,11 @@
 <?php
+// Copy this file to config.php and fill in your database credentials.
+// config.php is gitignored so your real credentials stay private.
+
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'invoice');
-define('DB_USER', 'echo');
-define('DB_PASS', 'echo');
+define('DB_USER', 'root');
+define('DB_PASS', '');
 
 function getDB(): PDO {
     static $pdo = null;

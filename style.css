@@ -18,8 +18,8 @@ a{color:var(--primary);text-decoration:none}
 a:hover{text-decoration:underline}
 
 /* Container */
-.container-center{max-width:62rem;margin:0 auto;padding:1.5rem}
-@media(min-width:1400px){.container-center{max-width:72rem}}
+.container-center{max-width:76rem;margin:0 auto;padding:1.5rem}
+@media(min-width:1400px){.container-center{max-width:84rem}}
 
 /* Navbar */
 .navbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100}
@@ -27,7 +27,7 @@ a:hover{text-decoration:underline}
 .navbar .logo:hover{text-decoration:none}
 .navbar .logo svg{width:24px;height:24px}
 .nav-links{display:flex;align-items:center;gap:1rem}
-.nav-links a{color:var(--text-secondary);font-size:.875rem;font-weight:500}
+.nav-links a{color:#ffffff;font-size:.875rem;font-weight:500}
 .nav-links a:hover{color:var(--text);text-decoration:none}
 
 /* Buttons */
@@ -55,11 +55,14 @@ a:hover{text-decoration:underline}
 }
 
 /* Form Sections — continuous flow, no accordion */
-.form-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.form-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:.75rem}
 .form-section-title{padding:.85rem 1.25rem;font-size:.8rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border)}
 .form-section-body{padding:1rem 1.25rem 1.25rem}
 
 /* Form Elements */
+.input-group{display:flex;gap:0;border-radius:var(--radius);overflow:hidden}
+.input-group input{border-radius:var(--radius) 0 0 var(--radius);flex:1}
+.input-group select{border-radius:0 var(--radius) var(--radius) 0;border-left:none}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
 .form-row-3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:.75rem}
 .form-group{margin-bottom:.75rem}
@@ -97,6 +100,8 @@ a:hover{text-decoration:underline}
 .logo-upload .placeholder{color:var(--text-muted);font-size:.8rem}
 .logo-upload .placeholder svg{width:32px;height:32px;margin:0 auto .3rem;display:block;color:var(--text-muted)}
 .logo-upload img{max-height:52px;max-width:200px;object-fit:contain}
+.logo-remove{position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:rgba(15,23,42,.75);color:#fff;border:none;font-size:14px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;z-index:2}
+.logo-remove:hover{background:#dc2626}
 
 /* Items Table */
 .items-table{width:100%;border-collapse:collapse}
@@ -114,10 +119,10 @@ a:hover{text-decoration:underline}
 .add-item-btn{margin-top:.5rem}
 
 /* Totals */
-.totals-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem}
-.total-line{display:flex;justify-content:space-between;padding:.3rem 0;font-size:.875rem;color:var(--text-secondary)}
+.totals-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.65rem .85rem;margin-top:.5rem}
+.total-line{display:flex;justify-content:space-between;padding:.25rem 0;font-size:.875rem;color:var(--text-secondary)}
 .total-line strong{color:var(--text)}
-.total-gross{font-size:1.1rem;font-weight:700;border-top:2px solid var(--border);padding-top:.5rem;margin-top:.3rem;color:var(--text)}
+.total-gross{font-size:1.05rem;font-weight:700;border-top:2px solid var(--border);padding-top:.4rem;margin-top:.2rem;color:var(--text)}
 
 /* Status Badges */
 .status-badge{display:inline-flex;align-items:center;padding:.15rem .6rem;border-radius:9999px;font-size:.75rem;font-weight:600}
@@ -130,6 +135,7 @@ a:hover{text-decoration:underline}
 .preview-container{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg)}
 .preview-toolbar{display:flex;align-items:center;justify-content:space-between;padding:.5rem .75rem;background:var(--surface);border-bottom:1px solid var(--border)}
 .preview-toolbar-title{font-size:.8rem;font-weight:600;color:var(--text)}
+#previewContainer{transform-origin:top left}
 .template-tabs{display:flex;gap:.25rem}
 .template-tab{padding:.4rem .85rem;border-radius:var(--radius);font-size:.8rem;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text-secondary);transition:all var(--transition)}
 .template-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
@@ -162,7 +168,7 @@ a:hover{text-decoration:underline}
 .stat-card .value.red{color:var(--danger)}
 
 /* Table */
-.invoice-table{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;border-collapse:separate;border-spacing:0}
+.invoice-table{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);border-collapse:separate;border-spacing:0}
 .invoice-table th{background:var(--bg);padding:.7rem 1rem;text-align:left;font-size:.75rem;text-transform:uppercase;letter-spacing:.03em;color:var(--text-muted);font-weight:600;border-bottom:1px solid var(--border)}
 .invoice-table td{padding:.75rem 1rem;border-bottom:1px solid var(--border);font-size:.875rem}
 .invoice-table tbody tr:last-child td{border-bottom:none}

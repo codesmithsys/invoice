@@ -1,0 +1,14 @@
+RewriteEngine On
+
+DirectoryIndex index.php
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule ^index$ index.php [L]
+RewriteRule ^create$ create.php [L]
+RewriteRule ^view$ view.php [L]
+RewriteRule ^delete$ delete.php [L]
+RewriteRule ^duplicate$ duplicate.php [L]
+RewriteRule ^share$ share.php [L]
+RewriteRule ^view-public$ view-public.php [L]

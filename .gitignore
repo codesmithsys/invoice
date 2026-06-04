@@ -1,0 +1,30 @@
+# Real DB credentials (use config.example.php as template)
+config.php
+
+# User-uploaded logo files
+/uploads/*
+!/uploads/.gitkeep
+/uploads/.gitkeep
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.local
+
+# Build artifacts
+/node_modules/
+/vendor/
