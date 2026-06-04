@@ -4,6 +4,16 @@ A clean, self-hosted invoice management app built with **PHP + MySQL**. Create, 
 
 ![InvoiceApp](https://img.shields.io/badge/PHP-8.0%2B-777BB4) ![MySQL](https://img.shields.io/badge/MySQL-5.7%2B-4479A1) ![License](https://img.shields.io/badge/license-MIT-green)
 
+## Inspired by
+
+This project's editor UX and invoice templates are inspired by **[EasyInvoicePDF](https://github.com/VladSez/easy-invoice-pdf)** by [Vlad Sazonau](https://vladsazon.com) — a fantastic browser-only invoice generator. If you want a no-sign-up, client-side alternative, check it out. InvoiceApp takes the same "live preview + instant PDF" approach and adds a **server-side backend** (PHP + MySQL) so you can store, search, duplicate, and share invoices with your team.
+
+Differences from EasyInvoicePDF:
+- **Persistent storage** — invoices are saved to MySQL, not just held in browser state
+- **Multi-invoice management** — dashboard, search, filter, status tracking, duplicate
+- **Shareable links** — tokenized public URLs to send clients
+- **Your own data** — self-hosted, no third-party services required
+
 ## Features
 
 - **Live preview editor** — see changes as you type (split-screen 33/67 layout)
@@ -179,6 +189,12 @@ If you want to expose this to the public internet, you should:
 6. Restrict `view.php` and the actions to authenticated users only
 
 The **public share link** is intentionally token-based and read-only, so it's safe to share.
+
+## Credits
+
+- **[EasyInvoicePDF](https://github.com/VladSez/easy-invoice-pdf)** by [Vlad Sazonau](https://vladsazon.com) — inspiration for the editor UX, live preview, and invoice template design. Licensed under [AGPL-3.0](https://opensource.org/license/AGPL-3.0).
+- **[Favicon](https://github.com/VladSez/easy-invoice-pdf)** — the shield icon is derived from EasyInvoicePDF's branding.
+- QR code generation powered by [goqr.me API](https://goqr.me/api/).
 
 ## Contributing
 
