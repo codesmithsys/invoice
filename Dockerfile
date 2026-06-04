@@ -16,6 +16,9 @@ COPY --chown=www-data:www-data . /var/www/html/
 COPY nginx.conf /etc/nginx/sites-available/default
 RUN rm -f /etc/nginx/sites-enabled/* && ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
+# Pass all env vars to PHP (DB_HOST, DB_NAME, etc.)
+RUN sed -i 's/^;clear_env = no/clear_env = no/' /usr/local/etc/php-fpm.d/www.conf
+
 RUN mkdir -p /var/www/html/uploads /run/php \
     && chown -R www-data:www-data /var/www/html
 
