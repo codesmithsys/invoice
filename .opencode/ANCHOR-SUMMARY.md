@@ -32,7 +32,7 @@
 - Earlier attempts (now abandoned): Railway (Trial maxed out), Render (cold-start/health-check issues)
 
 ### In Progress
-- Verify full create-invoice flow on InfinityFree (user needs to import `setup.sql` via phpMyAdmin and test "+ New Invoice")
+- (None — fully deployed and working)
 
 ### Blocked
 - (None — deployment is live)
