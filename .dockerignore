@@ -2,7 +2,6 @@
 .gitignore
 .dockerignore
 Dockerfile
-docker-entrypoint.sh
 railway.json
 README.md
 LICENSE
