@@ -1,10 +1,22 @@
 #!/bin/bash
 set -e
 
-echo "Starting invoice app..."
+# Render assigns a port via $PORT (default 10000)
+# Railway assigns port via $PORT (default 8080)
+# Default to 8080 if neither is set
+export PORT="${PORT:-8080}"
+
+echo "Starting invoice app on port $PORT..."
+
+# Update nginx config to listen on the right port
+sed -i "s/listen 8080 default_server;/listen $PORT default_server;/" /etc/nginx/sites-available/default
+sed -i "s/listen 8080;/listen $PORT;/" /etc/nginx/sites-available/default
+
+# Update healthcheck port - Render checks the PORT directly
+echo "Nginx will listen on port: $PORT"
 
 if [ -n "$DB_HOST" ] && [ -n "$DB_NAME" ] && [ -n "$DB_USER" ]; then
-    echo "Waiting for MySQL at $DB_HOST..."
+    echo "Waiting for MySQL at $DB_HOST:${DB_PORT:-3306}..."
     READY=0
     for i in $(seq 1 30); do
         if mysql -h "$DB_HOST" -P "${DB_PORT:-3306}" -u "$DB_USER" -p"${DB_PASS}" -e "SELECT 1" >/dev/null 2>&1; then

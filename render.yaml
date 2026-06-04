@@ -1,0 +1,39 @@
+databases:
+  - name: invoice-db
+    databaseName: invoice
+    user: invoice
+    plan: free
+    ipAllowList: [] # since we only allow internal connections
+
+services:
+  - type: web
+    name: invoice
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: DB_HOST
+        fromDatabase:
+          name: invoice-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: invoice-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: invoice-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: invoice-db
+          property: user
+      - key: DB_PASS
+        fromDatabase:
+          name: invoice-db
+          property: password

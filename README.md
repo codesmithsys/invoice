@@ -124,6 +124,35 @@ Instead of editing `config.php`, the app reads these env vars (used automaticall
 
 If any of these are set, `config.php` uses them. Otherwise it falls back to `config.example.php`.
 
+## Deploy to Render
+
+The repo includes a `render.yaml` for one-click deployment. Render's free tier is generous and doesn't require a credit card for the first 90 days.
+
+### 1. Sign up on Render
+1. Go to https://render.com and sign up with your GitHub account
+
+### 2. Create a new Blueprint
+1. Go to https://dashboard.render.com/blueprints
+2. Click **New Blueprint Instance**
+3. Connect your GitHub account if prompted
+4. Select the `codesmithsys/invoice` repo
+5. Render will detect `render.yaml` and show two resources: `invoice-db` (MySQL) and `invoice` (web service)
+6. Click **Apply**
+7. Wait 5-10 minutes for the first build + database provisioning
+
+### 3. Get your public URL
+- Once the `invoice` service is **Live**, click it
+- The public URL will be at the top (e.g. `https://invoice-xxxx.onrender.com`)
+- Click it to open your invoice app
+
+### 4. (Optional) Custom domain
+- Service page → **Settings** → **Custom Domains** → **Add Custom Domain**
+
+> **Notes:**
+> - First deploy can take 5-10 minutes (image build + DB init)
+> - Free tier services sleep after 15 minutes of inactivity; first request after sleep takes ~30s to wake up
+> - Free PostgreSQL is also available if you prefer; change the `render.yaml` `type: postgres` and update `config.php` to use `pgsql` instead of `mysql`
+
 ## Deploy to Railway
 
 The repo includes a `Dockerfile` and `railway.json` for one-click deployment.
