@@ -112,14 +112,54 @@ Navigate to `http://localhost/invoice-app/` in your browser. You should see the 
 
 ### Environment variables (optional)
 
-Instead of editing `config.php`, you can use environment variables:
+Instead of editing `config.php`, the app reads these env vars (used automatically by `config.php`):
 
-```php
-define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-define('DB_NAME', getenv('DB_NAME') ?: 'invoice');
-define('DB_USER', getenv('DB_USER') ?: 'root');
-define('DB_PASS', getenv('DB_PASS') ?: '');
+| Variable | Default | Notes |
+|----------|---------|-------|
+| `DB_HOST` | _none — required for env mode_ | MySQL host |
+| `DB_PORT` | `3306` | MySQL port |
+| `DB_NAME` | `invoice` | Database name |
+| `DB_USER` | `root` | Database user |
+| `DB_PASS` | _empty_ | Database password |
+
+If any of these are set, `config.php` uses them. Otherwise it falls back to `config.example.php`.
+
+## Deploy to Railway
+
+The repo includes a `Dockerfile` and `railway.json` for one-click deployment.
+
+### 1. Create a new Railway project
+1. Go to [railway.app/new](https://railway.app/new)
+2. Click **Deploy from GitHub repo** → select `codesmithsys/invoice`
+
+### 2. Add a MySQL database
+1. In your Railway project, click **+ New** → **Database** → **MySQL**
+2. Wait for it to provision (1-2 minutes)
+3. Click the MySQL service → **Variables** tab. You'll see `MYSQLHOST`, `MYSQLPORT`, `MYSQLDATABASE`, `MYSQLUSER`, `MYSQLPASSWORD`
+
+### 3. Wire env vars into the web service
+Click your **web service** → **Variables** tab → add:
+
 ```
+DB_HOST   = ${{MySQL.MYSQLHOST}}
+DB_PORT   = ${{MySQL.MYSQLPORT}}
+DB_NAME   = ${{MySQL.MYSQLDATABASE}}
+DB_USER   = ${{MySQL.MYSQLUSER}}
+DB_PASS   = ${{MySQL.MYSQLPASSWORD}}
+```
+
+(Railway auto-fills these from the linked MySQL service.)
+
+### 4. Wait for first deploy
+- The Dockerfile's entrypoint runs `setup.sql` automatically on first boot, creating the `invoices` and `invoice_items` tables
+- Railway assigns a public URL like `https://invoice-production.up.railway.app`
+- Open it — you should see the dashboard
+
+### 5. (Optional) Custom domain
+- Settings → **Domains** → **Custom Domain**
+- Add your domain and update DNS as instructed
+
+> **Note:** The free Railway trial includes $5 of credit. After that, the hobby plan starts at ~$5/month + usage. The MySQL plugin is the main cost driver.
 
 ## Usage
 

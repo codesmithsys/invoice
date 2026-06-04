@@ -1,0 +1,15 @@
+.git
+.gitignore
+.dockerignore
+Dockerfile
+docker-entrypoint.sh
+railway.json
+README.md
+LICENSE
+config.php
+uploads/*
+!uploads/.gitkeep
+node_modules
+.idea
+.vscode
+*.log
