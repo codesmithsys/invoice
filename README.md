@@ -124,72 +124,6 @@ Instead of editing `config.php`, the app reads these env vars (used automaticall
 
 If any of these are set, `config.php` uses them. Otherwise it falls back to `config.example.php`.
 
-## Deploy to Render
-
-The repo includes a `render.yaml` for one-click deployment. Render's free tier is generous and doesn't require a credit card for the first 90 days.
-
-### 1. Sign up on Render
-1. Go to https://render.com and sign up with your GitHub account
-
-### 2. Create a new Blueprint
-1. Go to https://dashboard.render.com/blueprints
-2. Click **New Blueprint Instance**
-3. Connect your GitHub account if prompted
-4. Select the `codesmithsys/invoice` repo
-5. Render will detect `render.yaml` and show two resources: `invoice-db` (MySQL) and `invoice` (web service)
-6. Click **Apply**
-7. Wait 5-10 minutes for the first build + database provisioning
-
-### 3. Get your public URL
-- Once the `invoice` service is **Live**, click it
-- The public URL will be at the top (e.g. `https://invoice-xxxx.onrender.com`)
-- Click it to open your invoice app
-
-### 4. (Optional) Custom domain
-- Service page → **Settings** → **Custom Domains** → **Add Custom Domain**
-
-> **Notes:**
-> - First deploy can take 5-10 minutes (image build + DB init)
-> - Free tier services sleep after 15 minutes of inactivity; first request after sleep takes ~30s to wake up
-> - Free PostgreSQL is also available if you prefer; change the `render.yaml` `type: postgres` and update `config.php` to use `pgsql` instead of `mysql`
-
-## Deploy to Railway
-
-The repo includes a `Dockerfile` and `railway.json` for one-click deployment.
-
-### 1. Create a new Railway project
-1. Go to [railway.app/new](https://railway.app/new)
-2. Click **Deploy from GitHub repo** → select `codesmithsys/invoice`
-
-### 2. Add a MySQL database
-1. In your Railway project, click **+ New** → **Database** → **MySQL**
-2. Wait for it to provision (1-2 minutes)
-3. Click the MySQL service → **Variables** tab. You'll see `MYSQLHOST`, `MYSQLPORT`, `MYSQLDATABASE`, `MYSQLUSER`, `MYSQLPASSWORD`
-
-### 3. Wire env vars into the web service
-Click your **web service** → **Variables** tab → add:
-
-```
-DB_HOST   = ${{MySQL.MYSQLHOST}}
-DB_PORT   = ${{MySQL.MYSQLPORT}}
-DB_NAME   = ${{MySQL.MYSQLDATABASE}}
-DB_USER   = ${{MySQL.MYSQLUSER}}
-DB_PASS   = ${{MySQL.MYSQLPASSWORD}}
-```
-
-(Railway auto-fills these from the linked MySQL service.)
-
-### 4. Wait for first deploy
-- The Dockerfile's entrypoint runs `setup.sql` automatically on first boot, creating the `invoices` and `invoice_items` tables
-- Railway assigns a public URL like `https://invoice-production.up.railway.app`
-- Open it — you should see the dashboard
-
-### 5. (Optional) Custom domain
-- Settings → **Domains** → **Custom Domain**
-- Add your domain and update DNS as instructed
-
-> **Note:** The free Railway trial includes $5 of credit. After that, the hobby plan starts at ~$5/month + usage. The MySQL plugin is the main cost driver.
-
 ## Deploy to InfinityFree (free PHP + MySQL hosting)
 
 InfinityFree is a great way to get a free, permanent public URL for your invoice app — no credit card, no trial limits, free subdomain included. **Live demo: [invoice.great-site.net](https://invoice.great-site.net)**
@@ -235,7 +169,6 @@ define('DB_PORT', '3306');
 In cPanel → **File Manager** → `htdocs/`, upload **all files from the project root** EXCEPT:
 - `.git/` (git history)
 - `Dockerfile`, `docker-entrypoint.sh`, `nginx.conf` (Docker-only, not needed)
-- `render.yaml`, `railway.json` (other deployment configs)
 - `.dockerignore`
 
 The fastest way: zip the project on your computer (excluding the above), upload the zip, then **Extract** in cPanel.
