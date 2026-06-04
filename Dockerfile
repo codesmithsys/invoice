@@ -14,7 +14,8 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 COPY --chown=www-data:www-data . /var/www/html/
 
 COPY nginx.conf /etc/nginx/sites-available/default
-RUN rm -f /etc/nginx/sites-enabled/* && ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+RUN rm -f /etc/nginx/sites-enabled/* && ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default \
+    && rm -f /etc/nginx/sites-enabled/default.bak
 
 RUN mkdir -p /var/www/html/uploads /run/php \
     && chown -R www-data:www-data /var/www/html
@@ -22,4 +23,3 @@ RUN mkdir -p /var/www/html/uploads /run/php \
 EXPOSE 80
 
 ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
